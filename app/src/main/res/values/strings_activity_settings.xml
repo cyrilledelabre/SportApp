@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+
+    <!--  settings for Location -->
+    <string name="pref_location_key" translatable="false">location</string>
+    <string name="pref_location_title">Location</string>
+    <string name="pref_location_default" translatable="false">40</string>
+
+    <!--  settings for Name-->
+    <string name="pref_display_name_key" translatable="false">name</string>
+    <string name="pref_display_name_title">Name</string>
+    <string name="pref_display_name_default" translatable="false">Default</string>
+
+</resources>
