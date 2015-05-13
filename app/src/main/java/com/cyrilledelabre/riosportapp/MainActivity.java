@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.cyrilledelabre.riosportapp.utils.EventUtils;
 import com.cyrilledelabre.riosportapp.utils.Utils;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 
@@ -61,6 +62,7 @@ public class MainActivity extends ActionBarActivity {
         //get the email account @
         mEmailAccount = Utils.getEmailAccount(this);
 
+
         if (savedInstanceState == null) {
             //launch fragment
             mEventListFragment = EventListFragment.newInstance();
@@ -69,6 +71,11 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -82,6 +89,10 @@ public class MainActivity extends ActionBarActivity {
 
     protected void onResume() {
         super.onResume();
+
+
+        //facebook logger
+        AppEventsLogger.activateApp(this);
 
         if (null != mEmailAccount) {
             //perform authetification

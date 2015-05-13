@@ -4,6 +4,8 @@
     <string name="app_name">Rio Sport App</string>
     <string name="title_activity_detail">DetailActivity</string>
 
+    <string name ="facebook_app_id">1615983438614222</string>
+
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="action_settings">Settings</string>
@@ -20,10 +22,17 @@
     <string name="toast_only_one_google_account_registered">Your only registered Google account was
     selected
     </string>
+
+
+    <string name="toast_facebook_error">Error with Facebook connection</string>
+
     <string name="toast_you_must_sign_in_for_this_action">You must sign in for this action.</string>
     <string name="select_account_for_access">Select the account to access Rio Sport App</string>
     <string name="gms_not_available">Google Play services is not available</string>
     <string name="clear_account_message">Are you sure you want to clear the saved account? If you decide to do so, application will exit.</string>
     <string name="reload">Reload</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+
 
 </resources>
