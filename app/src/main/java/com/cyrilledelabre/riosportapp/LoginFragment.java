@@ -15,6 +15,7 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
@@ -60,7 +61,6 @@ public class LoginFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mCallbackManager = CallbackManager.Factory.create();
 
     }
@@ -69,8 +69,8 @@ public class LoginFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-//         inflater.inflate(R.layout.fragment_login, container, false);
+         super.onCreateView(inflater, container, savedInstanceState);
+    return   inflater.inflate(R.layout.fragment_login, container, false);
 
     }
 

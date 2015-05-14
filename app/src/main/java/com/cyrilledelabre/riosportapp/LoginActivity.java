@@ -1,13 +1,31 @@
 package com.cyrilledelabre.riosportapp;
 
+import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 
-public class LoginActivity extends ActionBarActivity
-      {
+public class LoginActivity extends ActionBarActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private final String LOG_TAG = LoginFragment.class.getSimpleName();
+
+
+    //google+ UTILS
+    private static final int RC_SIGN_IN = 0;
+    private GoogleApiClient mGoogleApiClient;
+
+    private boolean mSignInClicked;
+    private boolean mIntentInProgress;
 
 
     @Override
@@ -17,16 +35,108 @@ public class LoginActivity extends ActionBarActivity
         //add the file view to the Activity
         setContentView(R.layout.activity_login);
 
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
         if (savedInstanceState == null) {
             //add the Fragment to the id view of the activity @activitylogin// id
-            LoginFragment fragment = new LoginFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.login_container, fragment)
+                    .add(R.id.login_container, new LoginFragment())
                     .commit();
         }
 
-     //   AddGooglePlusImplementation();
+        AddGooglePlusImplementation();
 
+    }
+
+    private void AddGooglePlusImplementation() {
+        //Instantiate the Google Login Manager
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .build();
+
+        //add onclick listener to signinbutton
+        findViewById(R.id.plus_sign_in_button).setOnClickListener(this);
+    }
+
+
+    public void onClick(View view) {
+        Log.e(LOG_TAG, "onClick");
+
+        if (view.getId() == R.id.plus_sign_in_button && !mGoogleApiClient.isConnecting()) {
+            mSignInClicked = true;
+            mGoogleApiClient.connect();
+        }
+    }
+
+
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    protected void onStop() {
+        super.onStop();
+
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+
+    }
+
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+    }
+
+
+    public void onConnectionFailed(ConnectionResult result) {
+        if (!mIntentInProgress) {
+            if (mSignInClicked && result.hasResolution()) {
+                // The user has already clicked 'sign-in' so we attempt to resolve all
+                // errors until the user is signed in, or they cancel.
+                try {
+                    result.startResolutionForResult(this, RC_SIGN_IN);
+                    mIntentInProgress = true;
+                } catch (IntentSender.SendIntentException e) {
+                    // The intent was canceled before it was sent.  Return to the default
+                    // state and attempt to connect to get an updated ConnectionResult.
+                    mIntentInProgress = false;
+                    mGoogleApiClient.connect();
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mSignInClicked = false;
+        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+    }
+
+
+    protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        if (requestCode == RC_SIGN_IN) {
+            if (responseCode != RESULT_OK) {
+                mSignInClicked = false;
+            }
+
+            mIntentInProgress = false;
+
+            if (!mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.reconnect();
+            }
+        }
+    }
+
+    public void onConnectionSuspended(int cause) {
+        mGoogleApiClient.connect();
     }
 
 
