@@ -151,7 +151,10 @@ public class MainActivity extends ActionBarActivity {
      * the device, it allows user to choose one.
      */
     private void selectAccount() {
+        //Get the email account from
         Account[] accounts = Utils.getGoogleAccounts(this);
+        Log.e(LOG_TAG, accounts[0].name);
+
         int numOfAccount = accounts.length;
         switch (numOfAccount) {
             case 0:
@@ -233,6 +236,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             mEmailAccount = emailAccount;
+
             Utils.saveEmailAccount(MainActivity.this, emailAccount);
 
             return SUCCESS;

@@ -1,7 +1,24 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/login_container"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context="com.cyrilledelabre.riosportapp.LoginActivity" tools:ignore="MergeRootFrame" />
+    android:id="@+id/fragment_login"
+
+    tools:context="com.cyrilledelabre.riosportapp.LoginActivity" tools:ignore="MergeRootFrame">
+
+
+
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+
+
+</FrameLayout>
+
+
 
     <!--
     <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
