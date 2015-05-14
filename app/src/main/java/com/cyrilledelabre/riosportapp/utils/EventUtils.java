@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class EventUtils {
 
-    private final static String TAG = "EventUtils";
+    private static final String LOG_TAG = EventUtils.class.getSimpleName();
     private static com.appspot.riosportapp.event.Event sApiServiceHandler;
 
     public static void build(Context context, String email) {
@@ -54,7 +54,7 @@ public class EventUtils {
     public static List<DecoratedEvent> getEvents()
             throws EventException, IOException {
         if (null == sApiServiceHandler) {
-            Log.e(TAG, "getEvents(): no service handler was built");
+            Log.e(LOG_TAG, "getEvents(): no service handler was built");
             throw new EventException();
 
         }
@@ -95,7 +95,7 @@ public class EventUtils {
     public static boolean registerForEvent(Event event)
             throws EventException, IOException {
         if (null == sApiServiceHandler) {
-            Log.e(TAG, "registerForEvent(): no service handler was built");
+            Log.e(LOG_TAG, "registerForEvent(): no service handler was built");
             throw new EventException();
         }
 
@@ -116,7 +116,7 @@ public class EventUtils {
     public static boolean unregisterFromEvent(Event event)
             throws EventException, IOException {
         if (null == sApiServiceHandler) {
-            Log.e(TAG, "unregisterFromEvent(): no service handler was built");
+            Log.e(LOG_TAG, "unregisterFromEvent(): no service handler was built");
             throw new EventException();
         }
 
@@ -131,7 +131,7 @@ public class EventUtils {
     public static Event createEvent(EventForm event) throws EventException, IOException
     {
         if (null == sApiServiceHandler) {
-            Log.e(TAG, "createEvent(...): no service handler was built");
+            Log.e(LOG_TAG, "createEvent(...): no service handler was built");
             throw new EventException();
         }
         com.appspot.riosportapp.event.Event.CreateEvent
@@ -149,13 +149,16 @@ public class EventUtils {
      */
     public static Profile getProfile() throws EventException, IOException {
         if (null == sApiServiceHandler) {
-            Log.e(TAG, "getProfile(): no service handler was built");
+            Log.e(LOG_TAG, "getProfile(): no service handler was built");
             throw new EventException();
         }
 
         com.appspot.riosportapp.event.Event.GetProfile getProfile =
                 sApiServiceHandler.getProfile();
-        return getProfile.execute();
+
+        Profile profile  = getProfile.execute();
+
+        return profile;
     }
 
     /**
@@ -167,15 +170,25 @@ public class EventUtils {
      */
     public static com.appspot.riosportapp.event.Event buildServiceHandler(
             Context context, String email) {
+        Log.e(LOG_TAG, "buildServiceHandler : Email = " + email);
+
+
+        // get the audience
         GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(
                 context, AppConstants.AUDIENCE);
+
         credential.setSelectedAccountName(email);
 
         com.appspot.riosportapp.event.Event.Builder builder
                 = new com.appspot.riosportapp.event.Event.Builder(
                 AppConstants.HTTP_TRANSPORT,
                 AppConstants.JSON_FACTORY, credential);
-        builder.setApplicationName("event-central-server");
+        builder.setApplicationName("AndroidSportApp");
+
+
         return builder.build();
     }
+
+
+
 }

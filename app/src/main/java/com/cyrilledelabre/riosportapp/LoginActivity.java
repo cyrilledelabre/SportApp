@@ -1,11 +1,49 @@
 package com.cyrilledelabre.riosportapp;
 
-import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
+public class LoginActivity extends ActionBarActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //add the file view to the Activity
+        setContentView(R.layout.activity_login);
+
+        if (savedInstanceState == null) {
+            FacebookSdk.sdkInitialize(getApplicationContext());
+            //add the Fragment to the id view of the activity @activitylogin// id
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.login_container, new LoginFragment())
+                    .commit();
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppEventsLogger.activateApp(this);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+}
+
+
+/*
 import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,6 +62,7 @@ public class LoginActivity extends ActionBarActivity implements
 
     private static boolean mSignInClicked;
     private boolean mIntentInProgress;
+
 
 
     @Override
@@ -137,6 +176,9 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
 
+
 }
+
+*/
 
 

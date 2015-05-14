@@ -29,7 +29,6 @@ import android.text.format.DateUtils;
 
 import com.appspot.riosportapp.event.model.Event;
 import com.cyrilledelabre.riosportapp.R;
-import com.facebook.Profile;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.util.DateTime;
@@ -44,6 +43,7 @@ public class Utils {
     private static final String LOG_TAG = "Utils";
 
     private final static String PREFS_KEY_EMAIL = "email_account";
+    private final static String PREFS_KEY_TOKEN = "token_access";
     private final static String PREFS_KEY_NAME = "user_name";
 
 
@@ -57,25 +57,45 @@ public class Utils {
         saveStringToPreference(context, PREFS_KEY_EMAIL, email);
     }
     /**
+     * Persists the email address to preference storage space.
+     *
+     * @param context
+     * @param token
+     */
+    public static void saveTokenAccess(Context context, String token) {
+        saveStringToPreference(context, PREFS_KEY_TOKEN, token);
+    }
+    /**
      * Persists the profile name to preference storage space.
      *
      * @param context
      * @param profile
      */
-    public static void saveProfileName(Context context, Profile profile)
+    public static void saveProfileName(Context context, String profile)
     {
-        saveStringToPreference(context, PREFS_KEY_NAME, profile.getName());
+        saveStringToPreference(context, PREFS_KEY_NAME, profile);
     }
 
     /**
      * Returns the persisted name account, or <code>null</code> if none found.
      *
      * @param context
-     * @param String
+     * @return String
      */
     public static String getProfileName(Context context)
     {
        return getStringFromPreference(context, PREFS_KEY_NAME);
+    }
+
+    /**
+     * Returns the persisted token acccess, or <code>null</code> if none found.
+     *
+     * @param context
+     * @return String
+     */
+    public static String getTokenAccess(Context context)
+    {
+        return getStringFromPreference(context, PREFS_KEY_TOKEN);
     }
 
     /**
@@ -105,8 +125,6 @@ public class Utils {
             pref.edit().putString(key, value).apply();
         }
     }
-
-
     /**
      * Retrieves a String value from preference manager. If no such key exists, it will return
      * <code>null</code>.

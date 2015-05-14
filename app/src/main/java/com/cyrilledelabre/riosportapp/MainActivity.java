@@ -1,285 +1,106 @@
-/* Copyright 2014 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.cyrilledelabre.riosportapp;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.PersistableBundle;
 import android.widget.Toast;
 
-import com.cyrilledelabre.riosportapp.utils.EventUtils;
+import com.cyrilledelabre.riosportapp.MainEvents.MainEventsActivity;
 import com.cyrilledelabre.riosportapp.utils.Utils;
-import com.facebook.appevents.AppEventsLogger;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.common.AccountPicker;
+
+import it.neokree.googlenavigationdrawer.GAccount;
+import it.neokree.googlenavigationdrawer.GAccountListener;
+import it.neokree.googlenavigationdrawer.GSection;
+import it.neokree.googlenavigationdrawer.GoogleNavigationDrawer;
 
 /**
- * Sample Android application for the Event Central class for Google Cloud Endpoints.
- *
- * GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(MainActivity.this, "server:client_id:12312312312-abcdefghijklmnopqrstuvw012345678.apps.googleusercontent.com");
-
+ * Created by neokree on 17/12/14.
  */
-public class MainActivity extends ActionBarActivity {
-    private final String LOG_TAG = MainActivity.class.getSimpleName();
+public class MainActivity extends GoogleNavigationDrawer implements GAccountListener{
 
-    /**
-     * Activity result indicating a return from the Google account selection intent.
-     */
-    private static final int ACTIVITY_RESULT_FROM_ACCOUNT_SELECTION = 2222;
-
-    private AuthorizationCheckTask mAuthTask;
+    GAccount account;
+    GSection section1, section2, recorder,night,last,settingsSection;
     private String mEmailAccount;
-
-    private EventListFragment mEventListFragment;
+    private String mUserName;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //set the layout view
-        setContentView(R.layout.mainevents_activity_main);
-        //get the email account @
-        mEmailAccount = Utils.getEmailAccount(this);
-
-
-        if (savedInstanceState == null) {
-            //launch fragment
-            mEventListFragment = EventListFragment.newInstance();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, mEventListFragment)
-                    .commit();
-        }
-
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    public void init(Bundle savedInstanceState) {
+        String email="";
+        String name="";
+
+        if((mEmailAccount = Utils.getEmailAccount(this)) != null)
+            email = mEmailAccount;
+        if((mUserName = Utils.getProfileName(this)) != null)
+            name= mUserName;
+
+        account = new GAccount(name,email,new ColorDrawable(Color.parseColor("#9e9e9e")),this.getResources().getDrawable(R.drawable.bamboo));
+        this.addAccount(account);
+
+        this.setAccountListener(this);
+
+        // create sections
+        section1 = this.newSection("Home",new MainEventsActivity());
+        section2 = this.newSection("My Events",new FragmentIndex());
+        // recorder section with icon and 10 notifications
+        recorder = this.newSection("Recorder",this.getResources().getDrawable(R.drawable.ic_mic_white_24dp),new FragmentIndex()).setNotifications(10);
+        // night section with icon, section color and notifications
+        night = this.newSection("Night Section", this.getResources().getDrawable(R.drawable.ic_hotel_grey600_24dp), new FragmentIndex())
+                .setSectionColor(Color.parseColor("#2196f3")).setNotifications(150);
+        // night section with section color
+        last = this.newSection("Last Section", new FragmentIndex()).setSectionColor((Color.parseColor("#ff9800")));
+
+        Intent i = new Intent(this,SettingsActivity.class);
+        settingsSection = this.newSection("Settings",this.getResources().getDrawable(R.drawable.ic_settings_black_24dp),i);
+
+        // add your sections to the drawer
+        this.addSection(section1);
+        this.addSection(section2);
+        this.addDivisor();
+        this.addSection(recorder);
+        this.addSection(night);
+        this.addDivisor();
+        this.addSection(last);
+        this.addBottomSection(settingsSection);
+
+        // start thread
+        t.start();
+
     }
+
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mAuthTask != null) {
-            mAuthTask.cancel(true);
-            mAuthTask = null;
-        }
+    public void onAccountOpening(GAccount account) {
+        // open account activity or do what you want
     }
 
-    protected void onResume() {
-        super.onResume();
-
-
-        //facebook logger
-        AppEventsLogger.activateApp(this);
-
-        if (null != mEmailAccount) {
-            //perform authetification
-            performAuthCheck(mEmailAccount);
-        } else {
-            selectAccount();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_event, menu);
-        return true;
-    }
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_clear_account:
-                new AlertDialog.Builder(MainActivity.this).setTitle(null)
-                        .setMessage(getString(R.string.clear_account_message))
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                Utils.saveEmailAccount(MainActivity.this, null);
-                                dialog.cancel();
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        })
-                        .create()
-                        .show();
-
-                break;
-            case R.id.action_reload:
-                mEventListFragment.reload();
-                break;
-            case R.id.action_settings:
-                startActivity( new Intent(this, SettingsActivity.class));
-                break;
-        }
-        return true;
-    }
-
-    /*
-     * Selects an account for talking to Google Play services. If there is more than one account on
-     * the device, it allows user to choose one.
-     */
-    private void selectAccount() {
-        //Get the email account from
-        Account[] accounts = Utils.getGoogleAccounts(this);
-        Log.e(LOG_TAG, accounts[0].name);
-
-        int numOfAccount = accounts.length;
-        switch (numOfAccount) {
-            case 0:
-                // No accounts registered, nothing to do.
-                Toast.makeText(this, R.string.toast_no_google_accounts_registered,
-                        Toast.LENGTH_LONG).show();
-                break;
-            case 1:
-                mEmailAccount = accounts[0].name;
-                performAuthCheck(mEmailAccount);
-                break;
-            default:
-                // More than one Google Account is present, a chooser is necessary.
-                // Invoke an {@code Intent} to allow the user to select a Google account.
-                Intent accountSelector = AccountPicker.newChooseAccountIntent(null, null,
-                        new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false,
-                        getString(R.string.select_account_for_access), null, null, null);
-                startActivityForResult(accountSelector, ACTIVITY_RESULT_FROM_ACCOUNT_SELECTION);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ACTIVITY_RESULT_FROM_ACCOUNT_SELECTION && resultCode == RESULT_OK) {
-            // This path indicates the account selection activity resulted in the user selecting a
-            // Google account and clicking OK.
-            mEmailAccount = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        } else {
-            finish();
-        }
-    }
-
-    /*
-     * Schedule the authorization check.
-     */
-    private void performAuthCheck(String email) {
-        // Cancel previously running tasks.
-        if (mAuthTask != null) {
-            mAuthTask.cancel(true);
-        }
-
-        // Start task to check authorization.
-        mAuthTask = new AuthorizationCheckTask();
-        mAuthTask.execute(email);
-    }
-
-    /**
-     * Verifies OAuth2 token access for the application and Google account combination with
-     * the {@code AccountManager} and the Play Services installed application. If the appropriate
-     * OAuth2 access hasn't been granted (to this application) then the task may fire an
-     * {@code Intent} to request that the user approve such access. If the appropriate access does
-     * exist then the button that will let the user proceed to the next activity is enabled.
-     */
-    private class AuthorizationCheckTask extends AsyncTask<String, Integer, Boolean> {
-
-        private final static boolean SUCCESS = true;
-        private final static boolean FAILURE = false;
-        private Exception mException;
-
+    // after 5 second (async task loading photo from website) change user photo
+    Thread t = new Thread(new Runnable() {
         @Override
-        protected Boolean doInBackground(String... emailAccounts) {
-            Log.i(LOG_TAG, "Background task started.");
+        public void run() {
+            try {
+                Thread.sleep(5000);
+                account.setPhoto(getResources().getDrawable(R.drawable.photo));
 
-            if (!Utils.checkGooglePlayServicesAvailable(MainActivity.this)) {
-                publishProgress(R.string.gms_not_available);
-                return FAILURE;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyAccountDataChanged();
+                        Toast.makeText(getApplicationContext(), "Loaded 'from web' user image", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                //Log.w("PHOTO","user account photo setted");
+
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-            String emailAccount = emailAccounts[0];
-            // Ensure only one task is running at a time.
-            mAuthTask = this;
-
-            // Ensure an email was selected.
-            if (TextUtils.isEmpty(emailAccount)) {
-                publishProgress(R.string.toast_no_google_account_selected);
-                return FAILURE;
-            }
-
-            mEmailAccount = emailAccount;
-
-            Utils.saveEmailAccount(MainActivity.this, emailAccount);
-
-            return SUCCESS;
         }
-
-        @Override
-        protected void onProgressUpdate(Integer... stringIds) {
-            // Toast only the most recent.
-            Integer stringId = stringIds[0];
-            Toast.makeText(MainActivity.this, getString(stringId), Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mAuthTask = this;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (success) {
-                // Authorization check successful, get events.
-                EventUtils.build(MainActivity.this, mEmailAccount);
-                getEventsForList();
-            } else {
-                // Authorization check unsuccessful.
-                mEmailAccount = null;
-                if (mException != null) {
-                    Utils.displayNetworkErrorMessage(MainActivity.this);
-                }
-            }
-            mAuthTask = null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-        }
-    }
-
-    private void getEventsForList() {
-        if (TextUtils.isEmpty(mEmailAccount)) {
-            return;
-        }
-        mEventListFragment.loadEvents();
-    }
+    });
 }

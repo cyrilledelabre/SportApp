@@ -3,4 +3,8 @@
     <color name="darkblue">#ff255bff</color>
     <color name="black">#000</color>
     <color name="grey_700">#cb1c1c1c</color>
+    <color name="dark_grey_500">#cb11141c</color>
+    <color name="grey_1000">#cb1c1c1c</color>
+
+
 </resources>
