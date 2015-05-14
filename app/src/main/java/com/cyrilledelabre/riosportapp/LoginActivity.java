@@ -3,20 +3,11 @@ package com.cyrilledelabre.riosportapp;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 
 public class LoginActivity extends ActionBarActivity
       {
 
     private final String LOG_TAG = LoginFragment.class.getSimpleName();
-
-
-    //google+ UTILS
-    private static final int RC_SIGN_IN = 0;
-    private GoogleApiClient mGoogleApiClient;
-
-    private boolean mSignInClicked;
-    private boolean mIntentInProgress;
 
 
     @Override
@@ -30,7 +21,7 @@ public class LoginActivity extends ActionBarActivity
             //add the Fragment to the id view of the activity @activitylogin// id
             LoginFragment fragment = new LoginFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_login, fragment)
+                    .add(R.id.login_container, fragment)
                     .commit();
         }
 
