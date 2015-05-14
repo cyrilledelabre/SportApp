@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -15,16 +13,16 @@ import com.google.android.gms.plus.Plus;
 
 public class LoginActivity extends ActionBarActivity implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener{
 
     private final String LOG_TAG = LoginFragment.class.getSimpleName();
 
 
     //google+ UTILS
     private static final int RC_SIGN_IN = 0;
-    private GoogleApiClient mGoogleApiClient;
+    public static GoogleApiClient mGoogleApiClient;
 
-    private boolean mSignInClicked;
+    private static boolean mSignInClicked;
     private boolean mIntentInProgress;
 
 
@@ -35,17 +33,26 @@ public class LoginActivity extends ActionBarActivity implements
         //add the file view to the Activity
         setContentView(R.layout.activity_login);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
 
         if (savedInstanceState == null) {
+
+            FacebookSdk.sdkInitialize(getApplicationContext());
+
             //add the Fragment to the id view of the activity @activitylogin// id
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.login_container, new LoginFragment())
                     .commit();
+
+            //AddGooglePlusImplementation();
+
         }
 
-        AddGooglePlusImplementation();
 
+    }
+
+    public static void setmSignInClicked(boolean bool)
+    {
+        mSignInClicked= bool;
     }
 
     private void AddGooglePlusImplementation() {
@@ -58,38 +65,27 @@ public class LoginActivity extends ActionBarActivity implements
                 .build();
 
         //add onclick listener to signinbutton
-        findViewById(R.id.plus_sign_in_button).setOnClickListener(this);
     }
 
 
-    public void onClick(View view) {
-        Log.e(LOG_TAG, "onClick");
 
-        if (view.getId() == R.id.plus_sign_in_button && !mGoogleApiClient.isConnecting()) {
-            mSignInClicked = true;
-            mGoogleApiClient.connect();
-        }
-    }
 
 
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
     }
 
     protected void onStop() {
         super.onStop();
-
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
+//        if (mGoogleApiClient.isConnected()) {
+  //          mGoogleApiClient.disconnect();
+    //    }
 
     }
 
 
     @Override
     public void onResume() {
-
         super.onResume();
 
     }
@@ -118,6 +114,7 @@ public class LoginActivity extends ActionBarActivity implements
     public void onConnected(Bundle connectionHint) {
         mSignInClicked = false;
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+        //TODO get credentials + Intent
     }
 
 

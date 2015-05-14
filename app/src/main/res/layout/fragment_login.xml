@@ -4,6 +4,17 @@
     android:layout_height="match_parent"
  >
 
+    <!-- Login progress -->
+    <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" android:visibility="gone" />
+
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
     <TextView
         android:id="@+id/text_details"
         android:layout_width="match_parent"
@@ -12,12 +23,20 @@
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/login_button" />
 
+    <com.google.android.gms.common.SignInButton
+
+        android:id="@+id/plus_sign_in_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp" />
+
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="center_horizontal|top" />
 
+    </LinearLayout>
 </FrameLayout>
