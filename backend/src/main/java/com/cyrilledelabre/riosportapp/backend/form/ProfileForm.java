@@ -1,11 +1,9 @@
 package com.cyrilledelabre.riosportapp.backend.form;
 
-import java.io.Serializable;
-
 /**
  * Pojo representing a profile form on the client side.
  */
-public class ProfileForm implements Serializable {
+public class ProfileForm{
     /**
      * Any string user wants us to display him/her on this system.
      */

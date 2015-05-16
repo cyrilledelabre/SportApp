@@ -43,7 +43,7 @@ public class MainEventsActivity extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       // getActivity().setContentView(R.layout.mainevents_activity_main);
+
         //get the email account @
         mEmailAccount = Utils.getEmailAccount(getActivity());
         mUserName= Utils.getProfileName(getActivity());

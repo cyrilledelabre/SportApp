@@ -311,6 +311,8 @@ public class SportApi implements Serializable {
         return result.getResult();
     }
 
+
+    //TODO : unused
     @ApiMethod(
             name = "getAnnouncement",
             path = "announcement",

@@ -1,4 +1,4 @@
-package com.cyrilledelabre.riosportapp;
+package com.cyrilledelabre.riosportapp.DetailEvent;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.appspot.riosportapp.event.model.Event;
+import com.cyrilledelabre.riosportapp.R;
 import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
 import com.cyrilledelabre.riosportapp.utils.EventUtils;
 import com.cyrilledelabre.riosportapp.utils.Utils;
@@ -48,51 +49,39 @@ public class DetailFragment extends Fragment{
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.detailevent_fragment_detail, container, false);
-        //recuperer l'objet
-        mDecoratedEvent = (DecoratedEvent) EventBus.getDefault().removeStickyEvent(DecoratedEvent.class);
 
-        // on set la vue
-        mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
-        mTitleView = (TextView) rootView.findViewById(R.id.detail_title_textview);
-        mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
-        mDescriptionView = (TextView) rootView.findViewById(R.id.detail_description_textview);
-        mSportsView = (TextView) rootView.findViewById(R.id.detail_sports_textview);
-        mParticipantsView = (TextView) rootView.findViewById(R.id.detail_participants_textview);
-        mRegisterButton = (Button) rootView.findViewById(R.id.detail_register_button);
+        if( savedInstanceState == null)
+        {
+            //recuperer l'objet
+            mDecoratedEvent = (DecoratedEvent) EventBus.getDefault().removeStickyEvent(DecoratedEvent.class);
+            // on set la vue
+            mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
+            mTitleView = (TextView) rootView.findViewById(R.id.detail_title_textview);
+            mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
+            mDescriptionView = (TextView) rootView.findViewById(R.id.detail_description_textview);
+            mSportsView = (TextView) rootView.findViewById(R.id.detail_sports_textview);
+            mParticipantsView = (TextView) rootView.findViewById(R.id.detail_participants_textview);
+            mRegisterButton = (Button) rootView.findViewById(R.id.detail_register_button);
 
-        mRegisterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerToEvent(mDecoratedEvent);
-            }
-        });
+            mRegisterButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    registerToEvent(mDecoratedEvent);
+                }
+            });
 
+        }
         updateView();
 
         return rootView;
     }
+
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.detail_event, menu);
-        /**
-         *
-         * Share stuff TODO later
-        // Retrieve the share menu item
-        MenuItem menuItem = menu.findItem(R.id.action_share);
 
-        // Get the provider and hold onto it to set/change the share intent.
-        ShareActionProvider mShareActionProvider =
-                (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-
-        // Attach an intent to this ShareActionProvider.  You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
-        if (mShareActionProvider != null ) {
-            mShareActionProvider.setShareIntent(createShareEventIntent());
-        } else {
-            Log.d(LOG_TAG, "Share Action Provider is null?");
-        }
-         */
     }
 
     /**
@@ -112,6 +101,7 @@ public class DetailFragment extends Fragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
     }
 
 
@@ -147,7 +137,6 @@ public class DetailFragment extends Fragment{
     class RegistrationAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
         private final DecoratedEvent mDecoratedEvent;
-        //private List<DecoratedEvent> mDecoratedEvents;
         private Exception mException;
 
         public RegistrationAsyncTask(DecoratedEvent event) {

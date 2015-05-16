@@ -175,8 +175,8 @@ public class Utils {
     public static String getFormattedParticipants(Context context, Event event)
     {
         StringBuffer sb = new StringBuffer();
-        String res = event.getEntriesAvailable().intValue()
-                +"/"+ event.getMaxParticipants().intValue();
+        int participants =event.getMaxParticipants().intValue() - event.getEntriesAvailable().intValue();
+        String res = participants+"/"+ event.getMaxParticipants().intValue();
         sb.append(context.getString(R.string.seats_available,res ));
 
         return sb.toString();

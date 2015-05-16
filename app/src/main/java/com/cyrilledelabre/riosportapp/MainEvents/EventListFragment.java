@@ -26,9 +26,9 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ListView;
 
-import com.cyrilledelabre.riosportapp.DetailActivity;
+import com.cyrilledelabre.riosportapp.DetailEvent.DetailActivity;
 import com.cyrilledelabre.riosportapp.EventDataAdapter;
-import com.cyrilledelabre.riosportapp.EventLoader;
+import com.cyrilledelabre.riosportapp.Tasks.EventLoader;
 import com.cyrilledelabre.riosportapp.R;
 import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
 import com.cyrilledelabre.riosportapp.utils.Utils;

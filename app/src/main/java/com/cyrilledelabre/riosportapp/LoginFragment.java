@@ -191,10 +191,7 @@ public class LoginFragment extends Fragment  {
             }
             else
             {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                getActivity().finish(); // Call once you redirect to another activity
+                goMainActivityIntent();
             }
 
 
@@ -266,14 +263,20 @@ public class LoginFragment extends Fragment  {
                 //TODO make better all
                 Toast.makeText(myContext, name + " is connected !", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                getActivity().finish(); // Call once you redirect to another activity
-
+                goMainActivityIntent();
 
             }
         }
 
+
+    }
+
+    private void goMainActivityIntent()
+    {
+
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        getActivity().finish(); // Call once you redirect to another activity
     }
 }

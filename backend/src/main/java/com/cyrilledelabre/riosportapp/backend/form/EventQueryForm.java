@@ -6,7 +6,6 @@ import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.common.collect.ImmutableList;
 import com.googlecode.objectify.cmd.Query;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -16,7 +15,7 @@ import static com.cyrilledelabre.riosportapp.backend.service.OfyService.ofy;
 /**
  * A simple Java object (POJO) representing a query options for Event.
  */
-public class EventQueryForm implements Serializable {
+public class EventQueryForm{
 
     private static final Logger LOG = Logger.getLogger(EventQueryForm.class.getName());
 

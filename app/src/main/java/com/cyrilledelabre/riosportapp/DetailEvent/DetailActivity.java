@@ -1,10 +1,13 @@
-package com.cyrilledelabre.riosportapp;
+package com.cyrilledelabre.riosportapp.DetailEvent;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.cyrilledelabre.riosportapp.R;
+import com.cyrilledelabre.riosportapp.SettingsActivity;
 
 public class DetailActivity extends ActionBarActivity {
 

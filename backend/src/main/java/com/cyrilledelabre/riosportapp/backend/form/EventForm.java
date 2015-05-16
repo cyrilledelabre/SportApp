@@ -3,14 +3,13 @@ package com.cyrilledelabre.riosportapp.backend.form;
 import com.google.appengine.api.datastore.GeoPt;
 import com.google.common.collect.ImmutableList;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * A simple Java object (POJO) representing a Event form sent from the client.
  */
-public class EventForm implements Serializable {
+public class EventForm{
     /**
      * The name of the event.
      */
@@ -48,7 +47,7 @@ public class EventForm implements Serializable {
     private EventForm() {}
 
     /**
-     * Public constructor is solely for Unit Test.
+     * Public constructor
      * @param name
      * @param description
      * @param sports
@@ -94,7 +93,6 @@ public class EventForm implements Serializable {
     public int getEntriesAvailable() {
         return entriesAvailable;
     }
-
 
     public GeoPt getCoordinates() { return coordinates; }
 }

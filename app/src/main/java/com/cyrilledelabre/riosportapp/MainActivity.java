@@ -1,14 +1,19 @@
 package com.cyrilledelabre.riosportapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.widget.Toast;
 
 import com.cyrilledelabre.riosportapp.MainEvents.MainEventsActivity;
 import com.cyrilledelabre.riosportapp.utils.Utils;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import it.neokree.googlenavigationdrawer.GAccount;
 import it.neokree.googlenavigationdrawer.GAccountListener;
@@ -22,6 +27,7 @@ public class MainActivity extends GoogleNavigationDrawer implements GAccountList
 
     GAccount account;
     GSection section1, section2, recorder,night,last,settingsSection;
+    GSection createEvents;
     private String mEmailAccount;
     private String mUserName;
 
@@ -40,7 +46,7 @@ public class MainActivity extends GoogleNavigationDrawer implements GAccountList
         if((mUserName = Utils.getProfileName(this)) != null)
             name= mUserName;
 
-        account = new GAccount(name,email,new ColorDrawable(Color.parseColor("#9e9e9e")),this.getResources().getDrawable(R.drawable.bamboo));
+        account = new GAccount(name,email,new ColorDrawable(Color.parseColor("#9e9e9e")),this.getResources().getDrawable(R.drawable.mat2));
         this.addAccount(account);
 
         this.setAccountListener(this);
@@ -48,8 +54,11 @@ public class MainActivity extends GoogleNavigationDrawer implements GAccountList
         // create sections
         section1 = this.newSection("Home",new MainEventsActivity());
         section2 = this.newSection("My Events",new FragmentIndex());
+
+        createEvents = this.newSection("Create an Event", new CreateEventsForm());
+
         // recorder section with icon and 10 notifications
-        recorder = this.newSection("Recorder",this.getResources().getDrawable(R.drawable.ic_mic_white_24dp),new FragmentIndex()).setNotifications(10);
+        //recorder = this.newSection("Recorder",this.getResources().getDrawable(R.drawable.ic_mic_white_24dp),new FragmentIndex()).setNotifications(10);
         // night section with icon, section color and notifications
         night = this.newSection("Night Section", this.getResources().getDrawable(R.drawable.ic_hotel_grey600_24dp), new FragmentIndex())
                 .setSectionColor(Color.parseColor("#2196f3")).setNotifications(150);
@@ -63,14 +72,15 @@ public class MainActivity extends GoogleNavigationDrawer implements GAccountList
         this.addSection(section1);
         this.addSection(section2);
         this.addDivisor();
-        this.addSection(recorder);
-        this.addSection(night);
-        this.addDivisor();
-        this.addSection(last);
-        this.addBottomSection(settingsSection);
+        this.addSection(createEvents);
+      //  this.addSection(night);
+       // this.addDivisor();
+       // this.addSection(last);
+       // this.addBottomSection(settingsSection);
 
         // start thread
-        t.start();
+        if(Utils.getTokenAccess(getApplicationContext())!=null)
+            t.start();
 
     }
 
@@ -80,26 +90,33 @@ public class MainActivity extends GoogleNavigationDrawer implements GAccountList
         // open account activity or do what you want
     }
 
-    // after 5 second (async task loading photo from website) change user photo
     Thread t = new Thread(new Runnable() {
         @Override
         public void run() {
             try {
-                Thread.sleep(5000);
+                URL MyProfilePicURL = new URL("https://graph.facebook.com/me/picture?type=normal&method=GET&access_token="+ Utils.getTokenAccess(getApplicationContext()));
                 account.setPhoto(getResources().getDrawable(R.drawable.photo));
+                Bitmap picture = null;
+                try {
+                    picture = BitmapFactory.decodeStream(MyProfilePicURL.openConnection().getInputStream());
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                account.setPhoto(picture);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         notifyAccountDataChanged();
-                        Toast.makeText(getApplicationContext(), "Loaded 'from web' user image", Toast.LENGTH_SHORT).show();
                     }
                 });
-                //Log.w("PHOTO","user account photo setted");
-
-
-            } catch (InterruptedException e) {
+            } catch (MalformedURLException e) {
                 e.printStackTrace();
+                //else get standard photo picture
+                account.setPhoto(getResources().getDrawable(R.drawable.mat1));
+                notifyAccountDataChanged();
+
             }
         }
     });

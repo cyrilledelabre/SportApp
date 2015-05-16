@@ -1,13 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="GoogleNavigationDrawerTheme.Light.DarkActionBar">
+    <style name="AppTheme" parent="GoogleNavigationDrawerTheme.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/dark_grey_500</item>
         <item name="colorAccent">@color/grey_1000</item>
     </style>
 
-    <style name="Fragments" parent="Theme.AppCompat.Light">
+    <style name="Fragments" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/dark_grey_500</item>
         <item name="colorAccent">@color/grey_1000</item>
     </style>

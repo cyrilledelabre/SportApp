@@ -50,7 +50,7 @@
 
                 <TextView
 
-                    android:text="rugby / soccer"
+                    android:text="no sports"
 
                     android:id="@+id/detail_sports_textview"
                     android:layout_height="wrap_content"

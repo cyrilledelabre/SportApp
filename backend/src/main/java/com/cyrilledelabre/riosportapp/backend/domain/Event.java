@@ -13,7 +13,6 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Parent;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +23,7 @@ import static com.cyrilledelabre.riosportapp.backend.service.OfyService.ofy;
  */
 @Entity
 @Cache
-public class Event implements Serializable {
+public class Event{
 
 
     /**

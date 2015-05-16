@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyrilledelabre.riosportapp;
+package com.cyrilledelabre.riosportapp.Tasks;
 
 
 import android.content.Context;
