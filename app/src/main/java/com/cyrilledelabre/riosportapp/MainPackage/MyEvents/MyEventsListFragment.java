@@ -27,7 +27,6 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.ListView;
 
 import com.cyrilledelabre.riosportapp.MainPackage.DetailEvent.DetailActivity;
-import com.cyrilledelabre.riosportapp.MainPackage.MainEvents.EventListFragment;
 import com.cyrilledelabre.riosportapp.R;
 import com.cyrilledelabre.riosportapp.Tasks.MyEventsLoader;
 import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
@@ -35,6 +34,9 @@ import com.cyrilledelabre.riosportapp.utils.EventDataAdapter;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.util.List;
+
+
+
 
 public class MyEventsListFragment extends ListFragment implements
         LoaderManager.LoaderCallbacks<List<DecoratedEvent>> {
@@ -127,9 +129,6 @@ public class MyEventsListFragment extends ListFragment implements
             setListShownNoAnimation(true);
         }
     }
-
-
-
 
     /*
     Constructor Instance //

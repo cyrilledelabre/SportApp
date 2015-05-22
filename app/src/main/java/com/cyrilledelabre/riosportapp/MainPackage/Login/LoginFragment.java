@@ -95,6 +95,7 @@ public class LoginFragment extends Fragment  {
             setupProfileTracker();
             mTokenTracker.startTracking();
             mProfileTracker.startTracking();
+
         }
     }
 
@@ -116,8 +117,18 @@ public class LoginFragment extends Fragment  {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        //facebook
-        setupLoginButton(view);
+        LoginButton mButtonLogin = (LoginButton) view.findViewById(R.id.login_button);
+        if(profile == null)
+        {
+            mButtonLogin.setFragment(this);
+            mButtonLogin.setReadPermissions(Arrays.asList("public_profile, email, user_friends"));
+            mButtonLogin.registerCallback(mCallbackManager, mFacebookCallback);
+        }
+        else
+        {
+            mButtonLogin.setVisibility(View.GONE);
+
+        }
     }
 
     @Override
@@ -275,7 +286,6 @@ public class LoginFragment extends Fragment  {
 
     private void goMainActivityIntent()
     {
-
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

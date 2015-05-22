@@ -3,4 +3,7 @@
     <datastore-index kind="Event" ancestor="true" source="manual">
         <property name="name" direction="asc"/>
     </datastore-index>
+    <datastore-index kind="Event" ancestor="true" source="manual">
+        <property name="startDate" direction="asc"/>
+    </datastore-index>
 </datastore-indexes>

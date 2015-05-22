@@ -1,7 +1,6 @@
 package com.cyrilledelabre.riosportapp.backend.spi;
 
 import com.cyrilledelabre.riosportapp.backend.Constants;
-import com.cyrilledelabre.riosportapp.backend.domain.Announcement;
 import com.cyrilledelabre.riosportapp.backend.domain.AppEngineUser;
 import com.cyrilledelabre.riosportapp.backend.domain.Event;
 import com.cyrilledelabre.riosportapp.backend.domain.Profile;
@@ -15,14 +14,13 @@ import com.google.api.server.spi.response.ConflictException;
 import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Work;
+import com.googlecode.objectify.cmd.Query;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +44,7 @@ import static com.cyrilledelabre.riosportapp.backend.service.OfyService.ofy;
         clientIds = { Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID,
                 Constants.API_EXPLORER_CLIENT_ID},
         audiences = { Constants.ANDROID_AUDIENCE },
-        description = "Event Central API for creating and querying events," +
+        description = "Event API for creating and querying events," +
                 " and for creating and getting user Profiles"
 )
 public class SportApi{
@@ -81,7 +79,7 @@ public class SportApi{
     private static String getUserId(User user) {
         String userId = user.getUserId();
         if (userId == null) {
-            LOG.info("userId is null, so trying to obtain it from the datastore.");
+            //LOG.info("userId is null, so trying to obtain it from the datastore.");
             AppEngineUser appEngineUser = new AppEngineUser(user);
             ofy().save().entity(appEngineUser).now();
             // Begin new session for not using session cache.
@@ -246,10 +244,7 @@ public class SportApi{
                 Event event = new Event(eventId, userId, eventForm);
                 // Save Event and Profile.
                 ofy().save().entities(event, profile).now();
-                //queue.add(ofy().getTransaction(),
-                //        TaskOptions.Builder.withUrl("/tasks/send_confirmation_email")
-                 //               .param("email", profile.getMainEmail())
-                  //              .param("eventInfo", event.toString()));
+
                 return event;
             }
         });
@@ -282,7 +277,7 @@ public class SportApi{
         }
         final String userId = getUserId(user);
         // Update the event with the eventForm sent from the client.
-        // Need a transaction because we need to safely preserve the number of allocated seats.
+        // Need a transaction because we need to safely preserve the number of allocated participants.
         TxResult<Event> result = ofy().transact(new Work<TxResult<Event>>() {
             @Override
             public TxResult<Event> run() {
@@ -311,20 +306,6 @@ public class SportApi{
     }
 
 
-    //TODO : unused
-    @ApiMethod(
-            name = "getAnnouncement",
-            path = "announcement",
-            httpMethod = HttpMethod.GET
-    )
-    public Announcement getAnnouncement() {
-        MemcacheService memcacheService = MemcacheServiceFactory.getMemcacheService();
-        Object message = memcacheService.get(Constants.MEMCACHE_ANNOUNCEMENTS_KEY);
-        if (message != null) {
-            return new Announcement(message.toString());
-        }
-        return null;
-    }
 
     /**
      * Returns a Event object with the given eventId.
@@ -408,7 +389,7 @@ public class SportApi{
 
     /**
      * Returns a list of Events that the user created.
-     * In order to receive the websafeEventKey via the JSON params, uses a POST method.
+     * In order to receive the websafeEventKey via the JSON params, we uses a POST method.
      *
      * @param user An user who invokes this method, null when the user is not signed in.
      * @return a list of Events that the user created.
@@ -431,7 +412,7 @@ public class SportApi{
     }
 
     /**
-     * Registers to the specified Event.
+     * Register to the specified Event.
      *
      * @param user An user who invokes this method, null when the user is not signed in.
      * @param websafeEventKey The String representation of the Event Key.
@@ -468,7 +449,7 @@ public class SportApi{
                 if (profile.getEventsKeysToJoin().contains(websafeEventKey)) {
                     return new TxResult<>(new ConflictException("You have already registered for this event"));
                 } else if (event.getEntriesAvailable() <= 0) {
-                    return new TxResult<>(new ConflictException("There are no seats available."));
+                    return new TxResult<>(new ConflictException("There are no places available."));
                 } else {
                     profile.addToEventsKeysToJoin(websafeEventKey);
                     event.joinEvent();
@@ -504,6 +485,7 @@ public class SportApi{
         if (user == null) {
             throw new UnauthorizedException("Authorization required");
         }
+
         final String userId = getUserId(user);
         TxResult<Boolean> result = ofy().transact(new Work<TxResult<Boolean>>() {
             @Override
@@ -530,4 +512,92 @@ public class SportApi{
         // NotFoundException is actually thrown here.
         return new WrappedBoolean(result.getResult());
     }
+
+
+
+
+
+
+
+    /**
+     * Delete the specified Event.
+     *
+     * @param user An user who invokes this method, null when the user is not signed in.
+     * @param websafeEventKey The String representation of the Event Key to unregister
+     *                             from.
+     * @return Boolean true when success, otherwise false.
+     * @throws UnauthorizedException when the user is not signed in.
+     * @throws NotFoundException when there is no Event with the given eventId.
+     * @throws ForbiddenException when the user is not the owner of the Event.
+     */
+    @ApiMethod(
+            name = "deleteEvent",
+            path = "event/{websafeEventKey}/delete",
+            httpMethod = HttpMethod.DELETE
+    )
+    public WrappedBoolean deleteEvent(final User user, @Named("websafeEventKey") final String websafeEventKey)
+            throws UnauthorizedException, NotFoundException, ForbiddenException, ConflictException {
+        // If not signed in, throw a 401 error.
+        if (user == null) {
+            throw new UnauthorizedException("Authorization required");
+        }
+
+        // Update the event with the eventForm sent from the client.
+        // Need a transaction because we need to safely preserve the number of allocated participants.
+    /*    TxResult<Boolean> result = ofy().transact(new Work<TxResult<Boolean>>() {
+            @Override
+            public TxResult<Boolean> run() {
+                // If there is no Event with the id, throw a 404 error.
+
+                if (event == null) {
+                    return new TxResult<>(new NotFoundException("No Event found with the key: " + websafeEventKey));
+                }
+                // If the user is not the owner, throw a 403 error.
+                Profile profile = ofy().load().key(Key.create(Profile.class, userId)).now();
+                if (profile == null ||
+                        !event.getOrganizerUserId().equals(userId)) {
+                    return new TxResult<>(new ForbiddenException("Only the owner can update the event."));
+                }
+                 ofy().delete().entity(event).now();
+                //we suppose everything okey
+                return new TxResult<>(true);
+
+
+                }
+        });
+        */
+
+        final String userId = getUserId(user);
+        Key<Event> eventKey = Key.create(websafeEventKey);
+        final Event  event = ofy().load().key(eventKey).now();
+        // If there is no Event with the id, throw a 404 error.
+        if (event == null) {
+            throw new NotFoundException("No Event found with the key: " + websafeEventKey);
+        }
+        // If the user is not the owner, throw a 403 error.
+        Profile profile = ofy().load().key(Key.create(Profile.class, userId)).now();
+        if (profile == null || !event.getOrganizerUserId().equals(userId)) {
+           throw new ForbiddenException("Only the owner can update the event.");
+        }
+
+        //TODO prepare query and post after//
+        // Un-registering everyone from the deleted Event.
+        Query<Profile> query = ofy().load().type(Profile.class);
+        for (Profile TempProfile : query)
+        {
+            if (TempProfile.getEventsKeysToJoin().contains(websafeEventKey)) {
+                TempProfile.unregisterFromEvent(websafeEventKey);
+                event.giveBackEntries();
+                ofy().save().entities(TempProfile, event);
+            }
+        }
+
+        ofy().delete().entity(event).now();
+
+        // NotFoundException is actually thrown here.
+        return new WrappedBoolean(true);
+    }
+
+
+
 }

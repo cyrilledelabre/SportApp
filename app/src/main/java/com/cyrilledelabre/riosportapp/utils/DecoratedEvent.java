@@ -26,10 +26,17 @@ public class DecoratedEvent{
 
     private Event mEvent;
     private boolean mRegistered;
+    private boolean mOwner;
 
-    public DecoratedEvent(Event event, boolean registered) {
+    /**
+     * Constructor
+     *
+     *
+     */
+    public DecoratedEvent(Event event, boolean registered, boolean owner) {
         mEvent = event;
         mRegistered = registered;
+        mOwner = owner;
     }
     public Event getEvent() {
         return mEvent;
@@ -42,7 +49,9 @@ public class DecoratedEvent{
     public boolean isRegistered() {
         return mRegistered;
     }
-
+    public boolean isOwner() {
+        return mOwner;
+    }
     public void setRegistered(boolean registered) {
         mRegistered = registered;
     }

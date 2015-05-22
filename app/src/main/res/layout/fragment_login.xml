@@ -1,29 +1,49 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
- >
+    android:weightSum="1"
+    android:orientation="vertical">
 
     <!-- Login progress -->
-    <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp" android:visibility="gone" />
 
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+
+
+        <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
+            android:layout_width="fill_parent" android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" android:visibility="visible"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Welcome to"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="RIO SPORT APP"
+            android:id="@+id/textView6"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/text_details"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/login_button" />
-
-
+        android:orientation="vertical"
+        android:layout_weight="0"
+        android:weightSum="1">
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
@@ -34,4 +54,4 @@
         android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>

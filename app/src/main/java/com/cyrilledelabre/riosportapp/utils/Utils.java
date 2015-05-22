@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.widget.Toast;
 
 import com.appspot.riosportapp.event.model.Event;
 import com.cyrilledelabre.riosportapp.R;
@@ -261,6 +262,22 @@ public class Utils {
                         DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH | DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_ABBREV_TIME);
     }
 
+    public static String getFormattedTime(Context context, DateTime dateTime)
+    {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(dateTime.getValue());
+        return DateUtils.formatDateTime(context, cal1.getTimeInMillis(),
+                DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_ABBREV_TIME);
+    }
+
+    public static String getFormattedDay(Context context, DateTime dateTime)
+    {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(dateTime.getValue());
+        return DateUtils.formatDateTime(context, cal1.getTimeInMillis(),
+                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH);
+    }
+
     /**
      * Check that Google Play services APK is installed and up to date.
      */
@@ -319,6 +336,13 @@ public class Utils {
                             }
                         }
                 ).create().show();
+    }
+
+
+
+    public static void displayToastMessage(String message, Context context)
+    {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 }
 

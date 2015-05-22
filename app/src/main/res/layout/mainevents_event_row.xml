@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
+        android:id="@+id/imageIsRegisteredView"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_action_navigation_accept"
         android:layout_alignParentRight="true"
@@ -20,7 +20,7 @@
         android:id="@+id/textEventTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/imageView"
+        android:layout_toLeftOf="@+id/imageIsRegisteredView"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@android:color/primary_text_light"
@@ -30,7 +30,7 @@
         android:id="@+id/textEventDescription"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/imageView"
+        android:layout_toLeftOf="@+id/imageIsRegisteredView"
         android:layout_below="@+id/textEventTitle"
         android:layout_marginTop="2dp"
         android:ellipsize="end"
@@ -39,10 +39,10 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textEventDate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/imageView"
+        android:layout_toLeftOf="@+id/imageIsRegisteredView"
         android:layout_below="@+id/textEventDescription"
         android:layout_marginTop="2dp"
         android:ellipsize="end"

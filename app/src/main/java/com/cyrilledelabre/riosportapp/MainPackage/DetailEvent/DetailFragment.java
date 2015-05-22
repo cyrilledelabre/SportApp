@@ -88,6 +88,11 @@ public class DetailFragment extends Fragment{
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().removeStickyEvent(DecoratedEvent.class);
+    }
 
     private void updateView()
     {

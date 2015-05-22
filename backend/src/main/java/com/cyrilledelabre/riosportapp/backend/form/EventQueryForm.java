@@ -30,10 +30,9 @@ public class EventQueryForm{
      * Enum representing a field.
      */
     public static enum Field {
-        CITY("city", FieldType.STRING),
-        TOPIC("topics", FieldType.STRING),
+        SPORT("sports ", FieldType.STRING),
         MONTH("month", FieldType.INTEGER),
-        MAX_ATTENDEES("maxAttendees", FieldType.INTEGER);
+        MAX_PARTICIPANTS("maxParticipants", FieldType.INTEGER);
 
         private String fieldName;
 

@@ -63,11 +63,14 @@ public class EventUtils {
 
         if (eventCollection != null && eventCollection.getItems() != null) {
             List<com.appspot.riosportapp.event.model.Event> events = eventCollection.getItems();
+
             List<DecoratedEvent> decoratedList = null;
+
             if (null == events || events.isEmpty()) {
+                //return null
                 return decoratedList;
             }
-            decoratedList = new ArrayList<DecoratedEvent>();
+            //getRegisteredAttribute
             Profile profile = getProfile();
             List<String> registeredConfKeys = null;
             if (null != profile) {
@@ -76,9 +79,10 @@ public class EventUtils {
             if (null == registeredConfKeys) {
                 registeredConfKeys = new ArrayList<String>();
             }
+
+            decoratedList = new ArrayList<>();
             for (Event event : events) {
-                DecoratedEvent decorated = new DecoratedEvent(event,
-                        registeredConfKeys.contains(event.getWebsafeKey()));
+                DecoratedEvent decorated = new DecoratedEvent(event,registeredConfKeys.contains(event.getWebsafeKey()),false);
                 decoratedList.add(decorated);
             }
             return decoratedList;
@@ -122,8 +126,7 @@ public class EventUtils {
                 registeredConfKeys = new ArrayList<String>();
             }
             for (Event event : events) {
-                DecoratedEvent decorated = new DecoratedEvent(event,
-                        registeredConfKeys.contains(event.getWebsafeKey()));
+                DecoratedEvent decorated = new DecoratedEvent(event,registeredConfKeys.contains(event.getWebsafeKey()),true);
                 decoratedList.add(decorated);
             }
             return decoratedList;
@@ -132,7 +135,7 @@ public class EventUtils {
     }
 
     /**
-     * Registers user for a {@link com.appspot.riosportapp.event.Event
+     * Registers user for a {@link com.appspot.riosportapp.event.Event}
      * @param event
      * @return result boolean Query
      * @throws EventException, IOException
@@ -153,7 +156,6 @@ public class EventUtils {
 
     /**
      * Unregisters user from a {@link com.appspot.riosportapp.event.Event}.
-     *
      * @param event
      * @return result boolean Query
      * @throws EventException
@@ -172,7 +174,13 @@ public class EventUtils {
         return result.getResult();
     }
 
-
+    /**
+     * create a Event of {@link com.appspot.riosportapp.event.Event}.
+     *
+     * @param  event EventForm
+     * @return event Event
+     * @throws EventException
+     */
     public static Event createEvent(EventForm event) throws EventException, IOException
     {
         if (null == sApiServiceHandler) {
@@ -182,6 +190,49 @@ public class EventUtils {
         com.appspot.riosportapp.event.Event.CreateEvent
                 createEvent = sApiServiceHandler.createEvent(event);
         return createEvent.execute();
+
+    }
+
+
+    /**
+     * updateEvent a Event of {@link com.appspot.riosportapp.event.Event}.
+     *
+     * @param  event EventForm
+     * @return event Event
+     * @throws EventException, IOException
+     */
+    public static Event updateEvent(Event event, EventForm updateEvent) throws EventException, IOException
+    {
+        if (null == sApiServiceHandler) {
+            Log.e(LOG_TAG, "updateEvent(...): no service handler was built");
+            throw new EventException();
+        }
+
+
+        com.appspot.riosportapp.event.Event.UpdateEvent
+                mEvent = sApiServiceHandler.updateEvent(event.getWebsafeKey(), updateEvent);
+        return mEvent.execute();
+
+    }
+
+    /**
+     * delete  a Event of {@link com.appspot.riosportapp.event.Event}.
+     *
+     * @param  event EventForm
+     * @return event Event
+     * @throws EventException
+     */
+    public static boolean deleteEvent(Event event) throws EventException, IOException
+    {
+        if (null == sApiServiceHandler) {
+            Log.e(LOG_TAG, "deleteEvent(...): no service handler was built");
+            throw new EventException();
+        }
+        com.appspot.riosportapp.event.Event.DeleteEvent
+                unregisterFromEvent = sApiServiceHandler.deleteEvent(
+                event.getWebsafeKey());
+        WrappedBoolean result = unregisterFromEvent.execute();
+        return result.getResult();
 
     }
 

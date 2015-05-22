@@ -23,9 +23,11 @@ public class MyEventsActivity extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            mEmailAccount = Utils.getEmailAccount(getActivity());
+
+        mEmailAccount = Utils.getEmailAccount(getActivity());
 
         if (savedInstanceState == null) {
+
             mMyEventsListFragment = MyEventsListFragment.newInstance();
 
             getChildFragmentManager().beginTransaction()
@@ -34,8 +36,8 @@ public class MyEventsActivity extends Fragment {
 
 
         }
-
     }
+
 
     public void onResume() {
         super.onResume();
@@ -50,7 +52,6 @@ public class MyEventsActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.myevents_activity, container, false);
-
         return rootView;
 
     }

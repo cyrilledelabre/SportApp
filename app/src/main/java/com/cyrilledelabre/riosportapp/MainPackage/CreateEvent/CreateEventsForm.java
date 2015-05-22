@@ -2,6 +2,7 @@ package com.cyrilledelabre.riosportapp.MainPackage.CreateEvent;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,12 +18,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
+import com.appspot.riosportapp.event.model.Event;
 import com.appspot.riosportapp.event.model.EventForm;
 import com.cyrilledelabre.riosportapp.R;
+import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
 import com.cyrilledelabre.riosportapp.utils.EventException;
 import com.cyrilledelabre.riosportapp.utils.EventUtils;
+import com.cyrilledelabre.riosportapp.utils.Utils;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
@@ -31,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -58,6 +63,10 @@ public class CreateEventsForm extends Fragment implements View.OnClickListener{
     private TimePickerDialog fromTimePickerDialog;
     private TimePickerDialog toTimePickerDialog;
     private SimpleDateFormat dateFormatter;
+    private SimpleDateFormat timeFormatter;
+
+    private boolean editMode;
+    DecoratedEvent mDecoratedEvent;
 
 
     public CreateEventsForm() {
@@ -70,23 +79,51 @@ public class CreateEventsForm extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         View rootView = inflater.inflate(R.layout.fragment_create_events_form, container, false);
-        //recuperer l'objet
+
+
+
         if(savedInstanceState ==null)
         {
 
-            dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-            // on set la vue
+            dateFormatter = new SimpleDateFormat("dd-MMM-yy", Locale.US);
+            timeFormatter = new SimpleDateFormat("HH-mm", Locale.US);
             findViewsById(rootView);
             setDateTimeField();
             setTimeField();
+
+
         }
 
 
-
+        mDecoratedEvent = EventBus.getDefault().getStickyEvent(DecoratedEvent.class);
+        if(mDecoratedEvent !=null)
+        {
+            setLastData(mDecoratedEvent);
+            editMode = true;
+        }else
+        {
+            editMode = false;
+        }
         return rootView;
+    }
+
+
+    private void setLastData(DecoratedEvent mDecoratedEvent)
+    {
+        Context mContext = getActivity();
+        Event event = mDecoratedEvent.getEvent();
+        mTitleView.setText(event.getName());
+        mDescriptionView.setText(event.getDescription());
+        mStartDateView.setText(Utils.getFormattedDay(mContext, event.getStartDate()));
+        mEndDateView.setText(Utils.getFormattedDay(mContext, event.getEndDate()));
+        mStartTimeView.setText(Utils.getFormattedTime(mContext, event.getStartDate()));
+        mEndTimeView.setText(Utils.getFormattedTime(mContext, event.getEndDate()));
+        //TODO do something for Sports Selection;
+       // event.getSports().get(0);
+        mSportsView.setSelection(0, true);
+        mParticipantsView.setText(event.getMaxParticipants().toString());
+
     }
 
     private void findViewsById(View rootView) {
@@ -115,7 +152,7 @@ public class CreateEventsForm extends Fragment implements View.OnClickListener{
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new addEventAsyncTask().execute();
+                new addEventAsyncTask(editMode).execute();
 
             }
 
@@ -165,7 +202,7 @@ public class CreateEventsForm extends Fragment implements View.OnClickListener{
 
             }
 
-        },newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE),true);
+        },newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE),false);
 
         toTimePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             public void onTimeSet(TimePicker view, int hour, int minutes) {
@@ -173,7 +210,7 @@ public class CreateEventsForm extends Fragment implements View.OnClickListener{
                 mEndTimeView.setText(endHour+"h"+endMinute);
             }
 
-        },newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE),true);
+        },newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE),false);
 
     }
 
@@ -191,53 +228,11 @@ public class CreateEventsForm extends Fragment implements View.OnClickListener{
         super.onActivityCreated(savedInstanceState);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().removeStickyEvent(DecoratedEvent.class);
 
-
-    public boolean addEvent() {
-        DateTime startDate, endDate;
-        Calendar newDate = Calendar.getInstance();
-        newDate.set(startYear, startMonth, startDay, startHour,startMinute);
-        startDate = new DateTime(newDate.getTime() ,  TimeZone.getTimeZone("UTC"));
-        newDate.set(endYear, endMonth, endDay, endHour,endMinute);
-        endDate = new DateTime(newDate.getTime() ,  TimeZone.getTimeZone("UTC"));
-
-
-        String mTitle = mTitleView.getText().toString();
-        String mDescription = mDescriptionView.getText().toString();
-
-        String mSports = mSportsView.getSelectedItem().toString();
-        String mParticipants = mParticipantsView.getText().toString();
-        int mParticipantsToInt;
-        if(mParticipants.matches("\\d+")) //check if only digits. Could also be text.matches("[0-9]+")
-        {
-              mParticipantsToInt = Integer.parseInt(mParticipants);
-        }else{
-            mParticipantsToInt = 100;
-        }
-        ArrayList<String> sports  = new ArrayList();
-        sports.add(mSports);
-
-        //eventForm
-        EventForm eventForm = new EventForm();
-        eventForm.setName(mTitle);
-        eventForm.setDescription(mDescription);
-        eventForm.setEndDate(endDate);
-        eventForm.setStartDate(startDate);
-        eventForm.setEntriesAvailable(mParticipantsToInt);
-        eventForm.setMaxParticipants(mParticipantsToInt);
-        eventForm.setSports(sports);
-
-
-        try {
-            EventUtils.createEvent(eventForm);
-        } catch (EventException e) {
-            e.printStackTrace();
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
 
     @Override
@@ -258,38 +253,78 @@ public class CreateEventsForm extends Fragment implements View.OnClickListener{
     class addEventAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
         private Exception mException;
+        private boolean mEditMode;
+        private EventForm mEventForm;
 
-        public addEventAsyncTask() {
+        public addEventAsyncTask(Boolean editMode) {
+            mEditMode = editMode;
         }
 
         @Override
         protected void onPreExecute() {
+            DateTime startDate, endDate;
+            Calendar newDate = Calendar.getInstance();
+            newDate.set(startYear, startMonth, startDay, startHour,startMinute);
+            startDate = new DateTime(newDate.getTime() ,  TimeZone.getTimeZone("UTC"));
+            newDate.set(endYear, endMonth, endDay, endHour,endMinute);
+            endDate = new DateTime(newDate.getTime() ,  TimeZone.getTimeZone("UTC"));
+            String mTitle = mTitleView.getText().toString();
+            String mDescription = mDescriptionView.getText().toString();
 
+            String mSports = mSportsView.getSelectedItem().toString();
+            String mParticipants = mParticipantsView.getText().toString();
+            int mParticipantsToInt;
+            if(mParticipants.matches("\\d+")) //check if only digits. Could also be text.matches("[0-9]+")
+            {
+                mParticipantsToInt = Integer.parseInt(mParticipants);
+            }else{
+                mParticipantsToInt = 100;
+            }
+            ArrayList<String> sports  = new ArrayList();
+            sports.add(mSports);
+
+            //eventForm
+            mEventForm = new EventForm();
+            mEventForm.setName(mTitle);
+            mEventForm.setDescription(mDescription);
+            mEventForm.setEndDate(endDate);
+            mEventForm.setStartDate(startDate);
+            mEventForm.setEntriesAvailable(mParticipantsToInt);
+            mEventForm.setMaxParticipants(mParticipantsToInt);
+            mEventForm.setSports(sports);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                        return addEvent();
-            } catch(Exception e) {
-                //logged
+                if(mEditMode)
+                {
+                    EventUtils.updateEvent(mDecoratedEvent.getEvent(), mEventForm);
+                }
+                else
+                {
+                    EventUtils.createEvent(mEventForm);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            } catch (EventException e) {
+                e.printStackTrace();
+                return false;
             }
-            return null;
+            return true;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
+            String message;
             if (null != result && result.booleanValue())
-                Toast.makeText(getActivity(), mTitleView.getText() + " created", Toast.LENGTH_SHORT).show();
+                message = mTitleView.getText() + (!mEditMode ? " created !" : " modified !");
             else
-                Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                message = "Error with " +  mTitleView.getText() +  (!mEditMode ? " creation" : " edition");
+            Utils.displayToastMessage(message, getActivity());
         }
     }
-
-
-
-
-
 
 }
 
