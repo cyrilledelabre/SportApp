@@ -49,6 +49,7 @@ public class Event{
      * Holds Profile key as the parent.
      */
     @Parent
+    @Index
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Key<Profile> profileKey;
     /**
@@ -72,12 +73,10 @@ public class Event{
     /**
      * The maximum participants in this event.
      */
-    @Index
     private int maxParticipants;
     /**
      * Number of entry currently available.
      */
-    @Index
     private int entriesAvailable;
 
     /**

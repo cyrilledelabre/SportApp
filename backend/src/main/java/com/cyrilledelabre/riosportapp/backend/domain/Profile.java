@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +31,8 @@ public class Profile implements Serializable {
     /**
      * Keys of the events that the user registers to participate.
      */
-    private List<String> eventsKeysToJoin = new ArrayList<>(0);
+    @Index
+    List<String> eventsKeysToJoin = new ArrayList<>(0);
 
 
 
@@ -57,17 +59,15 @@ public class Profile implements Serializable {
     public String getUserId() {
         return userId;
     }
-
-
+    public List<String> getEventsKeysToJoin() {
+        return ImmutableList.copyOf(eventsKeysToJoin);
+    }
 
 
     /**
      * Getter for eventsIdsToJoin.
      * @return an immutable copy of eventsIdsToJoin.
      */
-    public List<String> getEventsKeysToJoin() {
-        return ImmutableList.copyOf(eventsKeysToJoin);
-    }
 
     /**
      * default constructor private.

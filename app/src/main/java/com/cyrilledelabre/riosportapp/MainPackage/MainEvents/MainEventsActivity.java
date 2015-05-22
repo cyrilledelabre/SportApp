@@ -1,7 +1,8 @@
-package com.cyrilledelabre.riosportapp.MainEvents;
+package com.cyrilledelabre.riosportapp.MainPackage.MainEvents;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -169,7 +170,7 @@ public class MainEventsActivity extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ACTIVITY_RESULT_FROM_ACCOUNT_SELECTION && resultCode == getActivity().RESULT_OK) {
+        if (requestCode == ACTIVITY_RESULT_FROM_ACCOUNT_SELECTION && resultCode == Activity.RESULT_OK) {
             // This path indicates the account selection activity resulted in the user selecting a
             // Google account and clicking OK.
             mEmailAccount = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);

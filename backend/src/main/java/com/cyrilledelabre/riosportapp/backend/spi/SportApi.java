@@ -24,7 +24,6 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Work;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +49,7 @@ import static com.cyrilledelabre.riosportapp.backend.service.OfyService.ofy;
         description = "Event Central API for creating and querying events," +
                 " and for creating and getting user Profiles"
 )
-public class SportApi implements Serializable {
+public class SportApi{
 
     private static final Logger LOG = Logger.getLogger(SportApi.class.getName());
 

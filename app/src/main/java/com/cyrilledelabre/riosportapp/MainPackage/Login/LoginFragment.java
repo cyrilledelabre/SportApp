@@ -1,4 +1,4 @@
-package com.cyrilledelabre.riosportapp;
+package com.cyrilledelabre.riosportapp.MainPackage.Login;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cyrilledelabre.riosportapp.MainPackage.MainActivity;
+import com.cyrilledelabre.riosportapp.R;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;

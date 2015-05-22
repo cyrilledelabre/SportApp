@@ -7,7 +7,6 @@ import android.util.Log;
 import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
 import com.cyrilledelabre.riosportapp.utils.EventException;
 import com.cyrilledelabre.riosportapp.utils.EventUtils;
-import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,13 +27,13 @@ public class MyEventsLoader extends AsyncTaskLoader<List<DecoratedEvent>> {
     @Override
     public List<DecoratedEvent> loadInBackground() {
         try {
-            EventUtils.getProfile();
+            //EventUtils.getProfile();
             return EventUtils.getMyEvents();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get events", e);
             mException = e;
         } catch (EventException e) {
-            // logged
+            Log.e(TAG, "Failed to get events", e);
         }
         return null;
     }
@@ -52,7 +51,7 @@ public class MyEventsLoader extends AsyncTaskLoader<List<DecoratedEvent>> {
     protected void onStopLoading() {
         cancelLoad();
         if (mException != null) {
-            Utils.displayNetworkErrorMessage(getContext());
+            //Utils.displayNetworkErrorMessage(getContext());
         }
     }
 

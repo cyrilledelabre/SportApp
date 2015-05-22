@@ -1,8 +1,9 @@
-package com.cyrilledelabre.riosportapp;
+package com.cyrilledelabre.riosportapp.MainPackage.Login;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
+import com.cyrilledelabre.riosportapp.R;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 

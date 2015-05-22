@@ -41,7 +41,7 @@ public class EventLoader extends AsyncTaskLoader<List<DecoratedEvent>> {
     @Override
     public List<DecoratedEvent> loadInBackground() {
         try {
-            EventUtils.getProfile();
+            //EventUtils.getProfile();
             return EventUtils.getEvents();
         } catch (IOException e) {
             Log.e(TAG, "Failed to get events", e);

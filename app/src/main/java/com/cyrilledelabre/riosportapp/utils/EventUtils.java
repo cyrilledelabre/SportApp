@@ -218,7 +218,6 @@ public class EventUtils {
         // get the audience
         GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(
                 context, AppConstants.AUDIENCE);
-
         credential.setSelectedAccountName(email);
 
         com.appspot.riosportapp.event.Event.Builder builder
