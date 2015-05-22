@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event1">Football</string>
+    <string name="event2">Basketball</string>
+    <string name="event3">Rugby</string>
+    <string name="event4">VolleyBall</string>
+
+    <string-array name="eventlist">
+        <item>@string/event1</item>
+        <item>@string/event2</item>
+        <item>@string/event3</item>
+        <item>@string/event4</item>
+    </string-array>
+
+
+    <string name="eventtype">Choose one Sport</string>
+</resources>

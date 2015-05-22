@@ -3,8 +3,8 @@
     <color name="darkblue">#ff255bff</color>
     <color name="black">#000</color>
     <color name="grey_700">#cb1c1c1c</color>
-    <color name="dark_grey_500">#cb62729f</color>
-    <color name="grey_1000">#ffeff4fb</color>
+    <color name="dark_grey_500">#4b62729f</color>
+    <color name="grey_1000">#ffaaaeb3</color>
 
 
 </resources>

@@ -23,7 +23,7 @@
         android:layout_toLeftOf="@+id/imageView"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/darkblue"
+        android:textColor="@android:color/primary_text_light"
         android:textSize="20sp" />
 
     <TextView

@@ -198,6 +198,9 @@ public class Event{
         this.entriesAvailable = this.maxParticipants - entryAllocated;
     }
 
+
+
+
     public void joinEvent(){
         if (entriesAvailable <= 0) {
             throw new IllegalArgumentException("There is no more place available.");

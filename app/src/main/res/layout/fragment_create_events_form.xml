@@ -1,49 +1,199 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:weightSum="1">
 
-    <TextView
-        android:text="Create an Event"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:text="Create an Event"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textSize="24sp"
+            android:padding="10dp" />
+
+        <TextView
+            android:text="Title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/grey_700"
+            android:padding="5dp" />
+
+        <EditText
+            android:id="@+id/titleEvent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:textStyle="normal" />
+
+        <TextView
+            android:text="Description"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@color/grey_700"
+            android:paddingTop="10dp" />
+
+        <EditText
+            android:id="@+id/descEvent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_700"
+            android:textSize="16sp"
+            android:hint="Description"
+            />
+
+        <TextView
+            android:text="Choose Sport"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:textSize="16sp"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:id="@+id/textView" />
+
+        <Spinner
+            android:id="@+id/eventType"
+            android:layout_height="wrap_content"
+            android:prompt="@string/eventtype"
+            android:layout_width="fill_parent"
+            android:entries="@array/eventlist">
+        </Spinner>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_weight="1">
 
-        android:textAppearance="?android:textAppearanceLarge"
-        android:textSize="24sp"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:text="Start Date"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/grey_700"
+                android:paddingTop="10dp"
+                android:id="@+id/textView2" />
+
+            <EditText
+                android:id="@+id/startDate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="start date" />
+
+            <TextView
+                android:text="End Date"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/grey_700"
+                android:paddingTop="10dp"
+                android:id="@+id/textView4" />
+
+            <EditText
+                android:id="@+id/endDate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="end date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:text="and Hour"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/grey_700"
+                android:paddingTop="10dp"
+                android:id="@+id/startHourTextView" />
+
+            <EditText
+                android:id="@+id/startHour"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="hour" />
+
+            <TextView
+                android:text="and Hour"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/grey_700"
+                android:paddingTop="10dp"
+                android:id="@+id/endHourTextView" />
+
+            <EditText
+                android:id="@+id/endHour"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="hour" />
+        </LinearLayout>
+    </LinearLayout>
 
 
-    <TextView
-        android:text="Title"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-    <EditText
-        android:id="@+id/titleEvent"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="Title"
-        />
+        android:layout_weight="1">
 
-    <TextView
-        android:text="Description"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        />
-    <EditText
-        android:id="@+id/descEvent"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="Description"
-        />
+        <TextView
+            android:text="Places Available"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:paddingTop="10dp"
+            android:id="@+id/textView5" />
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/participants"
+            android:text="100" />
 
+    </LinearLayout>
 
-    <Button
-        android:text="Send"
-        android:id="@+id/sendButton"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_weight="0">
+
+        <Button
+            android:text="Send"
+            android:id="@+id/sendButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
 
 </LinearLayout>

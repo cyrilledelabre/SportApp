@@ -2,18 +2,19 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="GoogleNavigationDrawerTheme.Light">
-        <!-- Customize your theme here. -->
+        <!-- Menu Bar  -->
+        <item name="colorPrimary">@color/dark_grey_500</item>
+        <!-- Fond de la page  -->
+        <item name="colorAccent">@color/grey_1000</item>
+    </style>
+
+    <style name="Fragments" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/dark_grey_500</item>
         <item name="colorAccent">@color/grey_1000</item>
     </style>
 
-    <style name="Fragments" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/dark_grey_500</item>
-        <item name="colorAccent">@color/grey_1000</item>
-    </style>
 
-
-    <style name="SettingsTheme" parent="">
+    <style name="SettingsTheme" parent="Theme.AppCompat.Light">
 
     </style>
 

@@ -86,6 +86,51 @@ public class EventUtils {
         return null;
     }
 
+
+    /**
+     * Returns a list of {@link com.cyrilledelabre.riosportapp.utils.DecoratedEvent}s.
+     * This list includes information about what {@link com.appspot.riosportapp.event.Event}
+     * user has registered for.
+     *
+     * @return
+     * @throws EventException
+     * @see <code>getProfile</code>
+     */
+    public static List<DecoratedEvent> getMyEvents()
+            throws EventException, IOException {
+        if (null == sApiServiceHandler) {
+            Log.e(LOG_TAG, "getEvents(): no service handler was built");
+            throw new EventException();
+
+        }
+        com.appspot.riosportapp.event.Event.GetEventsCreated queryEvents = sApiServiceHandler.getEventsCreated();
+        EventCollection eventCollection = queryEvents.execute();
+
+        if (eventCollection != null && eventCollection.getItems() != null) {
+            List<com.appspot.riosportapp.event.model.Event> events = eventCollection.getItems();
+            List<DecoratedEvent> decoratedList = null;
+            if (null == events || events.isEmpty()) {
+                return decoratedList;
+            }
+            decoratedList = new ArrayList<DecoratedEvent>();
+            Profile profile = getProfile();
+            List<String> registeredConfKeys = null;
+            if (null != profile) {
+                registeredConfKeys = profile.getEventsKeysToJoin();
+            }
+            if (null == registeredConfKeys) {
+                registeredConfKeys = new ArrayList<String>();
+            }
+            for (Event event : events) {
+                DecoratedEvent decorated = new DecoratedEvent(event,
+                        registeredConfKeys.contains(event.getWebsafeKey()));
+                decoratedList.add(decorated);
+            }
+            return decoratedList;
+        }
+        return null;
+    }
+
     /**
      * Registers user for a {@link com.appspot.riosportapp.event.Event
      * @param event
@@ -170,9 +215,6 @@ public class EventUtils {
      */
     public static com.appspot.riosportapp.event.Event buildServiceHandler(
             Context context, String email) {
-        Log.e(LOG_TAG, "buildServiceHandler : Email = " + email);
-
-
         // get the audience
         GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(
                 context, AppConstants.AUDIENCE);

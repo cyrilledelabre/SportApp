@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cyrilledelabre.riosportapp;
+package com.cyrilledelabre.riosportapp.utils;
 
 
 import android.content.Context;
@@ -23,8 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
-import com.cyrilledelabre.riosportapp.utils.Utils;
+import com.cyrilledelabre.riosportapp.R;
 
 import java.util.List;
 

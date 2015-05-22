@@ -191,8 +191,15 @@ public class Utils {
     public static String getSports(Event event)
     {
         StringBuffer sb = new StringBuffer();
+        int i = 0;
         for(String e : event.getSports())
-            sb.append(e + " /");
+        {
+            if(i++ == 0)
+                sb.append(e);
+            else
+                sb.append(" / " + e);
+        }
+
 
     return sb.toString();
     }
@@ -231,7 +238,7 @@ public class Utils {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(dateTime.getValue());
         return DateUtils
-                .getRelativeTimeSpanString(cal.getTimeInMillis(), System.currentTimeMillis(),
+                .getRelativeTimeSpanString(cal.getTimeInMillis(), System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME |
                         DateUtils.FORMAT_ABBREV_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH).toString();
     }
 
@@ -247,12 +254,11 @@ public class Utils {
             DateTime dateTimeEnd) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTimeInMillis(dateTimeStart.getValue());
-
         Calendar cal2 = Calendar.getInstance();
         cal2.setTimeInMillis(dateTimeEnd.getValue());
         return DateUtils
                 .formatDateRange(context, cal1.getTimeInMillis(), cal2.getTimeInMillis(),
-                        DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH);
+                        DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH | DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_ABBREV_TIME);
     }
 
     /**

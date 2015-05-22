@@ -22,7 +22,7 @@
 
         <!-- Login Activity Launcher -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".MainPackage.Login.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +32,7 @@
 
         <!-- Main Activity Events Lists -->
         <activity
-            android:name=".MainActivity"
+            android:name=".MainPackage.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
@@ -40,21 +40,21 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".MainPackage.MainActivity"
             android:theme="@style/Fragments" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainPackage.MainActivity" />
         </activity>
 
         <activity
-            android:name=".DetailEvent.DetailActivity"
+            android:name=".MainPackage.DetailEvent.DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainPackage.MainActivity"
             android:theme="@style/Fragments" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainPackage.MainActivity" />
         </activity>
 
 
