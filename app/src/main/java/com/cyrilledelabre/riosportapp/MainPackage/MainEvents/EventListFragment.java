@@ -21,19 +21,22 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ListView;
 
 import com.cyrilledelabre.riosportapp.MainPackage.DetailEvent.DetailActivity;
-import com.cyrilledelabre.riosportapp.Tasks.EventLoader;
 import com.cyrilledelabre.riosportapp.R;
+import com.cyrilledelabre.riosportapp.Tasks.ApiTask.EventsLoader;
 import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
 import com.cyrilledelabre.riosportapp.utils.EventDataAdapter;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class EventListFragment extends ListFragment implements
         LoaderManager.LoaderCallbacks<List<DecoratedEvent>> {
@@ -49,6 +52,7 @@ public class EventListFragment extends ListFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().removeAllStickyEvents();
 
         //add layout
         getListView().setFastScrollEnabled(true);
@@ -60,7 +64,6 @@ public class EventListFragment extends ListFragment implements
         mAdapter = new EventDataAdapter(getActivity());
 
         setEmptyText(getString(R.string.no_events));
-
         setListAdapter(mAdapter);
 
         setListShown(false);
@@ -72,22 +75,32 @@ public class EventListFragment extends ListFragment implements
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(getActivity(),DetailActivity.class);
-        de.greenrobot.event.EventBus.getDefault().postSticky(mAdapter.getItem(position));
+        EventBus.getDefault().postSticky(mAdapter.getItem(position));
         this.startActivity(intent);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        reload();
+    }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadEvents();
+    }
 
     /*
-     * (non-Javadoc)
-     * @see android.support.v4.app.LoaderManager.LoaderCallbacks#onCreateLoader(int,
-     * android.os.Bundle)
-     *
-     * Start the EventLoader Async Task
-     */
+             * (non-Javadoc)
+             * @see android.support.v4.app.LoaderManager.LoaderCallbacks#onCreateLoader(int,
+             * android.os.Bundle)
+             *
+             * Start the EventsLoader Async Task
+             */
     @Override
     public Loader<List<DecoratedEvent>> onCreateLoader(int arg0, Bundle arg1) {
-        return new EventLoader(getActivity());
+        return new EventsLoader(getActivity());
     }
 
     /*
@@ -111,8 +124,8 @@ public class EventListFragment extends ListFragment implements
     @Override
     public void onLoadFinished(Loader<List<DecoratedEvent>> loader,
                                List<DecoratedEvent> data) {
-        EventLoader eventLoader = (EventLoader) loader;
-        if (eventLoader.getException() != null) {
+        EventsLoader eventsLoader = (EventsLoader) loader;
+        if (eventsLoader.getException() != null) {
             Utils.displayNetworkErrorMessage(getActivity());
             return;
         }
@@ -141,13 +154,19 @@ public class EventListFragment extends ListFragment implements
     }
 
     public void loadEvents() {
-        getLoaderManager().initLoader(0, null, this); //TODO see doc
+        if(isAdded())
+            getLoaderManager().initLoader(0, null, this); //TODO see doc
+        else
+            Log.e(LOG_TAG,"Error loadEvents");
     }
 
 
     public void reload() {
         setListShown(false);
-        getLoaderManager().restartLoader(0, null, this).startLoading(); //TODO see doc
+        if(isAdded())
+            getLoaderManager().restartLoader(0, null, this).startLoading(); //TODO see doc
+        else
+            Log.e(LOG_TAG, "Error reload");
     }
 
 

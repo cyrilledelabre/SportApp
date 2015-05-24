@@ -267,14 +267,15 @@ public class EventUtils {
     public static com.appspot.riosportapp.event.Event buildServiceHandler(
             Context context, String email) {
         // get the audience
-        GoogleAccountCredential credential = GoogleAccountCredential.usingAudience(
+        GoogleAccountCredential credentiales = GoogleAccountCredential.usingAudience(
                 context, AppConstants.AUDIENCE);
-        credential.setSelectedAccountName(email);
+        credentiales.setSelectedAccountName(email);
+
 
         com.appspot.riosportapp.event.Event.Builder builder
                 = new com.appspot.riosportapp.event.Event.Builder(
                 AppConstants.HTTP_TRANSPORT,
-                AppConstants.JSON_FACTORY, credential);
+                AppConstants.JSON_FACTORY, credentiales);
         builder.setApplicationName("AndroidSportApp");
 
 

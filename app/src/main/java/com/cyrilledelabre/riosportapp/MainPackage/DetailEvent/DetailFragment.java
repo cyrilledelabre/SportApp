@@ -38,8 +38,9 @@ public class DetailFragment extends Fragment{
     private TextView mParticipantsView;
     private Button mRegisterButton;
 
-    public DetailFragment() {
-        setHasOptionsMenu(true); //otherwise not call the oncreatemenuoptions
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -47,35 +48,32 @@ public class DetailFragment extends Fragment{
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.detailevent_fragment_detail, container, false);
+        mDecoratedEvent = EventBus.getDefault().getStickyEvent(DecoratedEvent.class);
 
-        if( savedInstanceState == null)
-        {
-            //recuperer l'objet
-            mDecoratedEvent = EventBus.getDefault().getStickyEvent(DecoratedEvent.class);
-            // on set la vue
-            mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
-            mTitleView = (TextView) rootView.findViewById(R.id.detail_title_textview);
-            mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
-            mDescriptionView = (TextView) rootView.findViewById(R.id.detail_description_textview);
-            mSportsView = (TextView) rootView.findViewById(R.id.detail_sports_textview);
-            mParticipantsView = (TextView) rootView.findViewById(R.id.detail_participants_textview);
-            mRegisterButton = (Button) rootView.findViewById(R.id.detail_register_button);
+        //recuperer l'objet
+        // on set la vue
+        mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
+        mTitleView = (TextView) rootView.findViewById(R.id.detail_title_textview);
+        mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
+        mDescriptionView = (TextView) rootView.findViewById(R.id.detail_description_textview);
+        mSportsView = (TextView) rootView.findViewById(R.id.detail_sports_textview);
+        mParticipantsView = (TextView) rootView.findViewById(R.id.detail_participants_textview);
+        mRegisterButton = (Button) rootView.findViewById(R.id.detail_register_button);
 
-            mRegisterButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    registerToEvent(mDecoratedEvent);
-                }
-            });
+        mRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerToEvent(mDecoratedEvent);
+            }
+        });
 
-        }
+
         updateView();
 
         return rootView;
     }
 
 
-  
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -91,7 +89,21 @@ public class DetailFragment extends Fragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        EventBus.getDefault().removeStickyEvent(DecoratedEvent.class);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.e(LOG_TAG, "On detach");
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e(LOG_TAG, "onDestroy");
+        //EventBus.getDefault().removeStickyEvent(DecoratedEvent.class);
+
     }
 
     private void updateView()

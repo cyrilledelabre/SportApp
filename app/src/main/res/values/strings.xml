@@ -14,7 +14,7 @@
 
     <string name="close">Close</string>
     <string name="api_error_title">Error</string>
-    <string name="api_error_message">A server error occurred. The app will be closed. Try again later.</string>
+    <string name="api_error_message">Unable to connect to RioSportApp Server... Try again later.</string>
 
     <string name="toast_no_google_account_selected">No Google Account Selected</string>
     <string name="toast_exception_checking_authorization">Exception checking authorization</string>

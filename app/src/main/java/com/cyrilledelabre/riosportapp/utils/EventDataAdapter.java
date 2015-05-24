@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import com.cyrilledelabre.riosportapp.MainPackage.CreateEvent.CreateEventsActivity;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.Tasks.DeleteEventAsyncTask;
+import com.cyrilledelabre.riosportapp.Tasks.ApiTask.DeleteEventAsyncTask;
 
 import java.util.List;
 

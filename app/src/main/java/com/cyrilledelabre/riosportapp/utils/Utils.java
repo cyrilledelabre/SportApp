@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -275,7 +274,7 @@ public class Utils {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTimeInMillis(dateTime.getValue());
         return DateUtils.formatDateTime(context, cal1.getTimeInMillis(),
-                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH);
+                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_TIME);
     }
 
     /**
@@ -329,13 +328,9 @@ public class Utils {
         new AlertDialog.Builder(
                 context).setTitle(R.string.api_error_title)
                 .setMessage(R.string.api_error_message)
-                .setCancelable(false)
-                .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                System.exit(0);
-                            }
-                        }
-                ).create().show();
+                .setCancelable(true)
+
+                .create().show();
     }
 
 

@@ -1,8 +1,10 @@
 package com.cyrilledelabre.riosportapp.MainPackage.Login;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,26 +12,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cyrilledelabre.riosportapp.MainPackage.MainActivity;
 import com.cyrilledelabre.riosportapp.R;
+import com.cyrilledelabre.riosportapp.Tasks.ApiTask.AuthorizationCheckTask;
+import com.cyrilledelabre.riosportapp.Tasks.FacebookTask.FetchUserInfo;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
 
 import java.util.Arrays;
 
@@ -46,48 +48,56 @@ public class LoginFragment extends Fragment  {
     private AccessTokenTracker mTokenTracker;
     private ProfileTracker mProfileTracker;
 
-    private FetchUserEmail mUserEmailTask;
+    private FetchUserInfo mUserTask;
 
+    private Context mContext;
+    private static Profile mProfile;
+    private static AccessToken mAccessToken;
 
-    private static Profile profile;
-    private static AccessToken accessToken;
+    private Button mDismissButton;
+
+    /**
+     * for the authorization with a google account
+     */
+    private AuthorizationCheckTask mAuthTask;
+    private String mEmailAccount;
+    /**
+     * Activity result indicating a return from the Google account selection intent.
+     */
+    private static final int ACTIVITY_RESULT_FROM_ACCOUNT_SELECTION = 2222;
 
 
     private FacebookCallback<LoginResult> mFacebookCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
             Log.e(LOG_TAG, "onSuccess : LOGIN SUCCESS");
-            accessToken = loginResult.getAccessToken();
-            profile = Profile.getCurrentProfile();
+            //mAccessToken = loginResult.getAccessToken();
+            //mProfile = Profile.getCurrentProfile();
             //wait until getting the response
-           constructAndSave();
+           goMainActivityIntent();
 
         }
 
-
         @Override
         public void onCancel() {
-            Log.d(LOG_TAG, "onCancel");
-
+            Log.e(LOG_TAG, "onCancel");
             Utils.displayNetworkErrorMessage(getActivity().getApplicationContext());
         }
 
         @Override
         public void onError(FacebookException e) {
-            Log.d(LOG_TAG, "onError " + e);
+            Log.e(LOG_TAG, "onError " + e);
             Utils.displayNetworkErrorMessage(getActivity().getApplicationContext());
 
         }
     };
-
-
-
-    public LoginFragment() {
-    }
+    public LoginFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext =getActivity().getApplicationContext();
+        mEmailAccount = Utils.getEmailAccount(mContext);
         if( savedInstanceState == null)
         {
             mCallbackManager = CallbackManager.Factory.create();
@@ -95,7 +105,6 @@ public class LoginFragment extends Fragment  {
             setupProfileTracker();
             mTokenTracker.startTracking();
             mProfileTracker.startTracking();
-
         }
     }
 
@@ -112,29 +121,42 @@ public class LoginFragment extends Fragment  {
         super.onDestroyView();
         mTokenTracker.stopTracking();
         mProfileTracker.stopTracking();
-        mUserEmailTask.cancel(true);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         LoginButton mButtonLogin = (LoginButton) view.findViewById(R.id.login_button);
-        if(profile == null)
+        mDismissButton = (Button) view.findViewById(R.id.dismissButton);
+
+        if(Utils.getTokenAccess(mContext) == null)
         {
             mButtonLogin.setFragment(this);
             mButtonLogin.setReadPermissions(Arrays.asList("public_profile, email, user_friends"));
             mButtonLogin.registerCallback(mCallbackManager, mFacebookCallback);
+
+            mDismissButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goMainActivityIntent();
+                }
+            });
         }
         else
         {
             mButtonLogin.setVisibility(View.GONE);
-
+            mDismissButton.setVisibility(View.GONE);
+            goMainActivityIntent();
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        constructAndSave();
+        if(Utils.getTokenAccess(mContext) != null)
+        {
+            goMainActivityIntent();
+        }
+
     }
 
     @Override
@@ -147,9 +169,13 @@ public class LoginFragment extends Fragment  {
         super.onActivityResult(requestCode, resultCode, data);
         if (mCallbackManager.onActivityResult(requestCode, resultCode, data))
             return;
-        else
-            getActivity().finish();
-
+        //account picker
+        if (requestCode == ACTIVITY_RESULT_FROM_ACCOUNT_SELECTION && resultCode == Activity.RESULT_OK) {
+            mEmailAccount = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            goMainActivityIntent();
+            return;
+        }
+        getActivity().finish();
 
     }
 
@@ -158,15 +184,19 @@ public class LoginFragment extends Fragment  {
         super.onDestroy();
         mTokenTracker.stopTracking();
         mProfileTracker.stopTracking();
-        mUserEmailTask.cancel(true);
+        if (mAuthTask != null) {
+            mAuthTask.cancel(true);
+            mAuthTask = null;
+        }
     }
 
     private void setupTokenTracker() {
         mTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                Log.d(LOG_TAG, "setupTokenTracker" + currentAccessToken);
-                accessToken = currentAccessToken;
+                Log.e(LOG_TAG, "setupTokenTracker");
+                mAccessToken = currentAccessToken;
+                Utils.saveTokenAccess(mContext, mAccessToken.getToken());
             }
         };
     }
@@ -175,120 +205,89 @@ public class LoginFragment extends Fragment  {
         mProfileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                Log.d(LOG_TAG, "setupProfileTracker" + currentProfile);
-                profile = currentProfile;
-                constructAndSave();
+                Log.e(LOG_TAG, "setupProfileTracker ");
+                mProfile = currentProfile;
+                //Fetch new User Info
+                mUserTask = new FetchUserInfo(mAccessToken, mContext);
+                mUserTask.execute();
             }
         };
     }
 
-    private void setupLoginButton(View view) {
-        LoginButton mButtonLogin = (LoginButton) view.findViewById(R.id.login_button);
-        mButtonLogin.setFragment(this);
-        mButtonLogin.setReadPermissions(Arrays.asList("public_profile, email, user_friends"));
-        mButtonLogin.registerCallback(mCallbackManager, mFacebookCallback);
-    }
-
     private void constructAndSave() {
-        profile = Profile.getCurrentProfile();
-        if (profile != null) {
-            //update Token and Profile
-            accessToken = AccessToken.getCurrentAccessToken();
-            Context myContext = getActivity().getApplicationContext();
-            if(Utils.getTokenAccess(myContext) != accessToken.getToken())
-            {
-                Log.v(LOG_TAG, "executing mUserEmailtask accessToken != savedAccessToken");
-                mUserEmailTask = new FetchUserEmail();
-                mUserEmailTask.execute();
-
-            }
-            else
-            {
-                goMainActivityIntent();
-            }
-
-
+        Log.e(LOG_TAG, "constructAndSave");
+        if (mProfile != null) {
+            goMainActivityIntent();
         }
     }
 
 
 
-    private class FetchUserEmail extends AsyncTask<String, Integer, Boolean> {
-
-        private String email;
-        private String name;
-        private String id;
-
-        private final static boolean SUCCESS = true;
-        private final static boolean FAILURE = false;
-        private boolean success = FAILURE;
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-
-
-            GraphRequest request = GraphRequest.newMeRequest(
-                    accessToken,
-                    new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(
-                                JSONObject object,
-                                GraphResponse response) {
-                            success = saveUserData(response);
-                        }
-                    });
-            Bundle parameters = new Bundle();
-            parameters.putString("fields","id,name,link");
-            request.setParameters(parameters);
-            request.executeAndWait();
-
-            return success;
-
-        }
-
-        private boolean saveUserData(GraphResponse response)
-        {
-            //Log.v(LOG_TAG,response.toString());
-            try{
-                //email = response.getJSONObject().get("email").toString();
-                name = response.getJSONObject().get("name").toString();
-                //id = response.getJSONObject().get("id").toString();
-                 return SUCCESS;
-            }catch(JSONException e)
-            {
-                Log.e(LOG_TAG,"JSON Exception : " + e);
-            }
-            return FAILURE;
-        }
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if(success) {
-                Context myContext = getActivity().getApplicationContext();
-                Utils.saveTokenAccess(myContext, accessToken.getToken());
-                Utils.saveProfileName(myContext, name);
-                //TODO make better all
-                Toast.makeText(myContext, name + " is connected !", Toast.LENGTH_SHORT).show();
-
-                goMainActivityIntent();
-
-            }
-        }
-
-
-    }
 
     private void goMainActivityIntent()
     {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        getActivity().finish(); // Call once you redirect to another activity
+        if (mEmailAccount !=null) {
+            performAuthCheck(mEmailAccount);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            getActivity().finish(); // Call once you redirect to another activity
+        } else {
+            selectAccount();
+        }
+
+    }
+
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+
+
+    private void selectAccount() {
+        //Get the email account from
+        Account[] accounts = Utils.getGoogleAccounts(mContext.getApplicationContext());
+
+        int numOfAccount = accounts.length;
+        switch (numOfAccount) {
+            case 0:
+                // No accounts registered, nothing to do.
+                Toast.makeText(mContext.getApplicationContext(), R.string.toast_no_google_accounts_registered,
+                        Toast.LENGTH_LONG).show();
+                break;
+            case 1:
+                mEmailAccount = accounts[0].name;
+                performAuthCheck(mEmailAccount);
+                break;
+            default:
+                // More than one Google Account is present, a chooser is necessary.
+                // Invoke an {@code Intent} to allow the user to select a Google account.
+                Intent accountSelector = AccountPicker.newChooseAccountIntent(null, null,
+                        new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false,
+                        getString(R.string.select_account_for_access), null, null, null);
+                startActivityForResult(accountSelector, ACTIVITY_RESULT_FROM_ACCOUNT_SELECTION);
+        }
+    }
+
+    /*
+     * Schedule the authorization check.
+     */
+    private void performAuthCheck(String email) {
+        // Cancel previously running tasks.
+        if (mAuthTask != null) {
+            mAuthTask.cancel(true);
+        }
+        // Start task to check authorization.
+            mAuthTask = new AuthorizationCheckTask(getActivity());
+        try{
+            mAuthTask.execute(email).get();
+        }catch(Exception e)
+        {
+            Log.e(LOG_TAG,"Error PerformAuthTask" + e);
+        }
     }
 }

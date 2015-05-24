@@ -175,10 +175,12 @@ public class SportApi{
     @ApiMethod(name = "getProfile", path = "profile", httpMethod = HttpMethod.GET)
     public Profile getProfile(final User user) throws UnauthorizedException {
         if (user == null) {
-            throw new UnauthorizedException("Authorization required");
+            throw new UnauthorizedException("Authorization required :  getProfile");
         }
         return ofy().load().key(Key.create(Profile.class, getUserId(user))).now();
     }
+
+
 
     /**
      * Creates or updates a Profile object associated with the given user object.

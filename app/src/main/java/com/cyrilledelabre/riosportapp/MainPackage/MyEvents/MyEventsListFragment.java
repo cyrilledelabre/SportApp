@@ -28,14 +28,14 @@ import android.widget.ListView;
 
 import com.cyrilledelabre.riosportapp.MainPackage.DetailEvent.DetailActivity;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.Tasks.MyEventsLoader;
+import com.cyrilledelabre.riosportapp.Tasks.ApiTask.MyEventsLoader;
 import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
 import com.cyrilledelabre.riosportapp.utils.EventDataAdapter;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.util.List;
 
-
+import de.greenrobot.event.EventBus;
 
 
 public class MyEventsListFragment extends ListFragment implements
@@ -52,7 +52,7 @@ public class MyEventsListFragment extends ListFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        EventBus.getDefault().removeAllStickyEvents();
         //add layout
         getListView().setFastScrollEnabled(true);
         LayoutAnimationController controller = AnimationUtils
@@ -75,7 +75,7 @@ public class MyEventsListFragment extends ListFragment implements
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(getActivity(),DetailActivity.class);
-        de.greenrobot.event.EventBus.getDefault().postSticky(mAdapter.getItem(position));
+        EventBus.getDefault().postSticky(mAdapter.getItem(position));
         this.startActivity(intent);
     }
 
@@ -86,7 +86,7 @@ public class MyEventsListFragment extends ListFragment implements
      * @see android.support.v4.app.LoaderManager.LoaderCallbacks#onCreateLoader(int,
      * android.os.Bundle)
      *
-     * Start the EventLoader Async Task
+     * Start the EventsLoader Async Task
      */
     @Override
     public Loader<List<DecoratedEvent>> onCreateLoader(int arg0, Bundle arg1) {

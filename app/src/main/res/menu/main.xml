@@ -8,8 +8,5 @@
         android:icon="@drawable/ic_action_navigation_refresh"
         app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/action_clear_account"
-        android:title="@string/action_clear_account"
-        app:showAsAction="never"/>
+
 </menu>
