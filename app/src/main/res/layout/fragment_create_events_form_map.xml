@@ -1,0 +1,220 @@
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".PlacePickerActivity">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/poweredBy"
+        android:src="@drawable/powered_by_google_light"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose a Place..."
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:paddingBottom="20dp"
+                android:id="@+id/place_chooser" />
+
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+
+                <AutoCompleteTextView
+                    android:id="@+id/autocomplete_places"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Tape..."
+                    android:inputType="textNoSuggestions"
+                    android:textColor="@android:color/primary_text_light"
+                    android:layout_weight="4"
+
+                    android:popupBackground="#ffaaaeb3"/>
+
+
+                <Button
+                    android:layout_width="46dp"
+                    android:layout_height="wrap_content"
+                    android:text="Map"
+                    android:id="@+id/pickerButton"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.28" />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selected Place"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/place_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/place_details"
+                android:visibility="gone"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/place_attribution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Place attribution"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="...and the Date"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+            />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:baselineAligned="false">
+
+
+
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5">
+
+                    <TextView
+                        android:text="Start Date"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/grey_700"
+                        android:paddingTop="10dp"
+                        android:id="@+id/textView2" />
+
+                    <EditText
+                        android:id="@+id/startDate"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textNoSuggestions"
+
+                        android:hint="start date" />
+
+                    <TextView
+                        android:text="End Date"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="@color/grey_700"
+                        android:paddingTop="10dp"
+                        android:id="@+id/textView4" />
+
+                    <EditText
+                        android:id="@+id/endDate"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textNoSuggestions"
+
+                        android:hint="end date" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5">
+
+                    <TextView
+                        android:text="and Hour"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="@color/grey_700"
+                        android:paddingTop="10dp"
+                        android:id="@+id/startHourTextView" />
+
+                    <EditText
+                        android:id="@+id/startHour"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textNoSuggestions"
+
+                        android:hint="hour" />
+
+                    <TextView
+                        android:text="and Hour"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="@color/grey_700"
+                        android:paddingTop="10dp"
+                        android:id="@+id/endHourTextView" />
+
+                    <EditText
+                        android:id="@+id/endHour"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textNoSuggestions"
+
+                        android:hint="hour" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
+

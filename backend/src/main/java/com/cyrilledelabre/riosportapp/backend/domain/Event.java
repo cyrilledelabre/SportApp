@@ -45,9 +45,18 @@ public class Event{
      */
     @Index
     private GeoPt coordinates;
+
+
+    /**
+     * The localization of the event.
+     */
+    @Index
+    private String placeName;
     /**
      * Holds Profile key as the parent.
      */
+
+
     @Parent
     @Index
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
@@ -162,15 +171,13 @@ public class Event{
     public Date getEndDate() {
         return endDate == null ? null : new Date(endDate.getTime());
     }
-
     public int getMaxParticipants() {
         return maxParticipants;
     }
-
     public int getEntriesAvailable() {
         return entriesAvailable;
     }
-
+    public String getPlaceName(){return placeName;}
     /**
      * Updates the Event with EventForm.
      * This method is used upon object creation as well as updating existing Events
@@ -194,7 +201,8 @@ public class Event{
         }
         //change values
         this.maxParticipants = eventForm.getMaxParticipants();
-        this.entriesAvailable = this.maxParticipants - entryAllocated;
+        this.entriesAvailable = eventForm.getEntriesAvailable();
+        this.placeName = eventForm.getPlaceName();
     }
 
 

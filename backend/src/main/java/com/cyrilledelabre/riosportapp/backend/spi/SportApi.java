@@ -17,6 +17,8 @@ import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Work;
@@ -174,9 +176,10 @@ public class SportApi{
      */
     @ApiMethod(name = "getProfile", path = "profile", httpMethod = HttpMethod.GET)
     public Profile getProfile(final User user) throws UnauthorizedException {
-        if (user == null) {
+       if (user == null) {
+
             throw new UnauthorizedException("Authorization required :  getProfile");
-        }
+       }
         return ofy().load().key(Key.create(Profile.class, getUserId(user))).now();
     }
 

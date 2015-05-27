@@ -1,3 +1,4 @@
+/*
 package com.cyrilledelabre.riosportapp.backend.servlet;
 
 import com.cyrilledelabre.riosportapp.backend.Constants;
@@ -18,11 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 import static com.cyrilledelabre.riosportapp.backend.service.OfyService.*;
 
 
+*/
 /**
  * A servlet for putting announcements in memcache.
  * The announcement announces envents that are nearly full
  * (defined as having 1 - 5 places left)
- */
+ *//*
+
 @SuppressWarnings("serial")
 public class SetAnnouncementServlet extends HttpServlet {
 
@@ -57,10 +60,12 @@ public class SetAnnouncementServlet extends HttpServlet {
             String announcementText = announcementStringBuilder.toString();
 
             memcacheService.put(announcementKey, announcementText);
-            /**
+            */
+/**
             memcacheService.put(Constants.MEMCACHE_ANNOUNCEMENTS_KEY,
                     announcementStringBuilder.toString());
-            **/
+            **//*
+
         }
 
         // Set the response status to 204 which means
@@ -69,3 +74,4 @@ public class SetAnnouncementServlet extends HttpServlet {
         response.setStatus(204);
     }
 }
+*/

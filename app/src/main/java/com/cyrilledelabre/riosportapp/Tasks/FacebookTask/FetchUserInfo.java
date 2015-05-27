@@ -77,8 +77,10 @@ public class FetchUserInfo extends AsyncTask<Void, Void, Boolean> {
         }catch(JSONException e)
         {
             Log.e(LOG_TAG, "JSON Exception : " + e);
+        }finally {
+            return FAILURE;
+
         }
-        return FAILURE;
     }
     @Override
     protected void onPostExecute(Boolean success) {

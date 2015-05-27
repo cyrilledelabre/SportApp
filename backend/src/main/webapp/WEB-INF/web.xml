@@ -15,17 +15,6 @@
         <url-pattern>/_ah/spi/*</url-pattern>
     </servlet-mapping>
 
-    <!--
-
-    <servlet>
-        <servlet-name>SetAnnouncementServlet</servlet-name>
-        <servlet-class>com.cyrilledelabre.riosportapp.backend.servlet.SetAnnouncementServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SetAnnouncementServlet</servlet-name>
-        <url-pattern>/crons/set_announcement</url-pattern>
-    </servlet-mapping>
-    -->
 
     <security-constraint>
         <web-resource-collection>

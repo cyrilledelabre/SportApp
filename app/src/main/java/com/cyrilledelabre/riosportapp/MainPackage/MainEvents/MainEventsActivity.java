@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,13 +26,7 @@ public class MainEventsActivity extends Fragment {
     private final String LOG_TAG = MainEventsActivity.class.getSimpleName();
     private EventListFragment mEventListFragment;
 
-    /**
-     * Inflate your own menu
-     */
-    public MainEventsActivity()
-    {
-        setHasOptionsMenu(true);
-    }
+
 
     /**
      * Add menu layout
@@ -88,13 +83,22 @@ public class MainEventsActivity extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+/*
 
         if (savedInstanceState == null) {
-            FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
             mEventListFragment = EventListFragment.newInstance();
             getChildFragmentManager().beginTransaction()
                     .add(R.id.container, mEventListFragment)
                     .commit();
+        }
+*/
+
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            EventsListFragment fragment = new EventsListFragment();
+            transaction.replace(R.id.container, fragment);
+            transaction.commit();
         }
 
     }
@@ -106,7 +110,7 @@ public class MainEventsActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.mainevents_activity_main, container, false);
+        View rootView = inflater.inflate(R.layout.activity_main_events, container, false);
         return rootView;
 
     }

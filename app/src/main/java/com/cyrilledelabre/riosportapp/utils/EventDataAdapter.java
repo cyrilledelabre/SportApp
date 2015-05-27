@@ -26,7 +26,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cyrilledelabre.riosportapp.MainPackage.CreateEvent.CreateEventsActivity;
+import com.cyrilledelabre.riosportapp.MainPackage.CreateEvent.FormSlideActivity;
 import com.cyrilledelabre.riosportapp.R;
 import com.cyrilledelabre.riosportapp.Tasks.ApiTask.DeleteEventAsyncTask;
 
@@ -66,7 +66,7 @@ public class EventDataAdapter extends ArrayAdapter<DecoratedEvent> {
 
         if (convertView == null) {
             //create
-            convertView = inflater.inflate(R.layout.mainevents_event_row, null);
+            convertView = inflater.inflate(R.layout.fragment_main_events, null);
             holder = new ViewHolder();
             holder.titleView = (TextView) convertView.findViewById(R.id.textEventTitle);
             holder.descriptionView = (TextView) convertView.findViewById(R.id.textEventDescription);
@@ -93,7 +93,7 @@ public class EventDataAdapter extends ArrayAdapter<DecoratedEvent> {
 
         if (convertView == null) {
             //create
-            convertView = inflater.inflate(R.layout.myevents_event_row, null);
+            convertView = inflater.inflate(R.layout.fragment_my_events, null);
             holder = new ViewHolder();
             holder.titleView = (TextView) convertView.findViewById(R.id.textEventTitle);
             holder.descriptionView = (TextView) convertView.findViewById(R.id.textEventDescription);
@@ -137,12 +137,12 @@ public class EventDataAdapter extends ArrayAdapter<DecoratedEvent> {
     {
         de.greenrobot.event.EventBus.getDefault().postSticky(decoratedEvent);
 
-        Intent intent = new Intent(mContext,CreateEventsActivity.class);
+        Intent intent = new Intent(mContext,FormSlideActivity.class);
         de.greenrobot.event.EventBus.getDefault().postSticky(decoratedEvent);
         mContext.startActivity(intent);
         /*
         How to remplace current view // funny
-        CreateEventsForm fragment = new CreateEventsForm();
+        TextEventsForm fragment = new TextEventsForm();
         mContext.getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, fragment)
                 .commit();*/

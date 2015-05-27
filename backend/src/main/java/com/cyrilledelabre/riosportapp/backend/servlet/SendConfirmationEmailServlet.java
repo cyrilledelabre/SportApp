@@ -1,4 +1,4 @@
-package com.cyrilledelabre.riosportapp.backend.servlet;
+/*package com.cyrilledelabre.riosportapp.backend.servlet;
 
 import com.google.appengine.api.utils.SystemProperty;
 
@@ -18,9 +18,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
+*//**
  * A servlet for sending a notification e-mail.
- */
+ *//*
 public class SendConfirmationEmailServlet extends HttpServlet {
 
     private static final Logger LOG = Logger.getLogger(
@@ -49,4 +49,4 @@ public class SendConfirmationEmailServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
-}
+}*/

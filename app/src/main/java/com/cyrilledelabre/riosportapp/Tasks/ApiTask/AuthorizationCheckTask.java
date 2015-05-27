@@ -35,7 +35,7 @@ public class AuthorizationCheckTask extends AsyncTask<String, Integer, Boolean> 
 
     @Override
     protected Boolean doInBackground(String... emailAccounts) {
-        Log.e(LOG_TAG, "Background task started.");
+        Log.v(LOG_TAG, "Background task started.");
 
         if (!Utils.checkGooglePlayServicesAvailable(mContext)) {
             publishProgress(R.string.gms_not_available);
@@ -74,7 +74,7 @@ public class AuthorizationCheckTask extends AsyncTask<String, Integer, Boolean> 
     @Override
     protected void onPostExecute(Boolean success) {
         if (success) {
-            Log.e(LOG_TAG,"Finished AuthorizationChecktask ");
+            Log.v(LOG_TAG,"Finished AuthorizationChecktask ");
         } else {
             mEmailAccount = null;
             if (mException != null) {

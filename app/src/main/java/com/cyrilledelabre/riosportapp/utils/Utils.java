@@ -45,6 +45,8 @@ public class Utils {
     private final static String PREFS_KEY_EMAIL = "email_account";
     private final static String PREFS_KEY_TOKEN = "token_access";
     private final static String PREFS_KEY_NAME = "user_name";
+    private final static String PREFS_KEY_RADIUS = "radius";
+
 
 
     /**
@@ -76,8 +78,32 @@ public class Utils {
         saveStringToPreference(context, PREFS_KEY_NAME, profile);
     }
 
+
+    /**
+     * Persists the radius to preference storage space.
+     *
+     * @param context
+     * @param radius
+     */
+    public static void saveRadius(Context context, int radius)
+    {
+        saveIntToPreference(context, PREFS_KEY_RADIUS, radius);
+    }
+
+
     /**
      * Returns the persisted name account, or <code>null</code> if none found.
+     *
+     * @param context
+     * @return String
+     */
+    public static int getRadius(Context context)
+    {
+        return getIntFromPreference(context, PREFS_KEY_RADIUS);
+    }
+
+    /**
+     * Returns the radius, or <code>null</code> if none found.
      *
      * @param context
      * @return String
@@ -125,6 +151,27 @@ public class Utils {
             pref.edit().putString(key, value).apply();
         }
     }
+
+
+    /**
+     * Saves a int value under the provided key in the preference manager. If <code>value</code>
+     * is <code>0</code>, then the provided key will be removed from the preferences.
+     *
+     * @param context
+     * @param key
+     * @param value
+     */
+    public static void saveIntToPreference(Context context, String key, int value) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        if (value == 0) {
+            // we want to remove
+            pref.edit().remove(key).apply();
+        } else {
+            pref.edit().putInt(key, value).apply();
+        }
+    }
+
+
     /**
      * Retrieves a String value from preference manager. If no such key exists, it will return
      * <code>null</code>.
@@ -136,6 +183,20 @@ public class Utils {
     public static String getStringFromPreference(Context context, String key) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getString(key, null);
+    }
+
+
+    /**
+     * Retrieves a String value from preference manager. If no such key exists, it will return
+     * <code>null</code>.
+     *
+     * @param context
+     * @param key
+     * @return
+     */
+    public static int getIntFromPreference(Context context, String key) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getInt(key, 0);
     }
 
     /**

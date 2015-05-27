@@ -42,8 +42,17 @@ public class EventListFragment extends ListFragment implements
         LoaderManager.LoaderCallbacks<List<DecoratedEvent>> {
 
     private final String LOG_TAG = EventListFragment.class.getSimpleName();
-
+    public static final String ARG_PAGE = "page";
     private EventDataAdapter mAdapter;
+
+    public static EventListFragment create(int pageNumber) {
+        EventListFragment fragment = new EventListFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_PAGE, pageNumber);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     /*
      * (non-Javadoc)

@@ -10,7 +10,7 @@ import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.cyrilledelabre.riosportapp.MainPackage.CreateEvent.CreateEventsForm;
+import com.cyrilledelabre.riosportapp.MainPackage.CreateEvent.FormSlideActivity;
 import com.cyrilledelabre.riosportapp.MainPackage.MainEvents.MainEventsActivity;
 import com.cyrilledelabre.riosportapp.MainPackage.MyEvents.MyEventsActivity;
 import com.cyrilledelabre.riosportapp.R;
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import de.greenrobot.event.EventBus;
 import it.neokree.googlenavigationdrawer.GAccount;
 import it.neokree.googlenavigationdrawer.GAccountListener;
 import it.neokree.googlenavigationdrawer.GSection;
@@ -77,19 +76,27 @@ public class MainActivity extends GoogleNavigationDrawer implements GAccountList
         // create sections
         Home = newSection("Home", new MainEventsActivity());
         myEvents = newSection("My Events", new MyEventsActivity());
-        createEvents = newSection("Create an Event", new CreateEventsForm());
+
+        //Intent createEventsIntent = new Intent(this, CreateEventsActivity.class);
+        //createEvents = newSection("Create an Event", createEventsIntent);
 
         Intent i = new Intent(this,SettingsActivity.class);
-        settingsSection = this.newSection("Settings",this.getResources().getDrawable(R.drawable.ic_settings_black_24dp),i);
+        settingsSection = this.newSection("Settings", this.getResources().getDrawable(R.drawable.ic_settings_black_24dp), i);
+
+
+        Intent screen = new Intent(this, FormSlideActivity.class);
+        GSection screenSlide = newSection("Create an Event", screen);
 
         // add your sections to the drawer
         this.addSection(Home);
         this.addSection(myEvents);
         this.addDivisor();
-        this.addSection(createEvents);
+        //this.addSection(createEvents);
+        this.addSection(screenSlide);
 
 
-       this.addBottomSection(settingsSection);
+
+        this.addBottomSection(settingsSection);
     }
 
 

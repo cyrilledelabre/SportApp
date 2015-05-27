@@ -47,19 +47,19 @@ public class LoginActivity extends ActionBarActivity {
 /*
 import com.facebook.FacebookSdk;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClientSingleton;
 import com.google.android.gms.plus.Plus;
 
 public class LoginActivity extends ActionBarActivity implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClientSingleton.ConnectionCallbacks,
+        GoogleApiClientSingleton.OnConnectionFailedListener{
 
     private final String LOG_TAG = LoginFragment.class.getSimpleName();
 
 
     //google+ UTILS
     private static final int RC_SIGN_IN = 0;
-    public static GoogleApiClient mGoogleApiClient;
+    public static GoogleApiClientSingleton mGoogleApiClient;
 
     private static boolean mSignInClicked;
     private boolean mIntentInProgress;
@@ -97,7 +97,7 @@ public class LoginActivity extends ActionBarActivity implements
 
     private void AddGooglePlusImplementation() {
         //Instantiate the Google Login Manager
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClientSingleton.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API)

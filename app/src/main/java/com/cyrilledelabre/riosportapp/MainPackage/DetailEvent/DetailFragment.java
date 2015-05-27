@@ -38,6 +38,10 @@ public class DetailFragment extends Fragment{
     private TextView mParticipantsView;
     private Button mRegisterButton;
 
+
+    public DetailFragment() {
+        setHasOptionsMenu(true); //otherwise not call the oncreatemenuoption
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +51,7 @@ public class DetailFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.detailevent_fragment_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_detail_event, container, false);
         mDecoratedEvent = EventBus.getDefault().getStickyEvent(DecoratedEvent.class);
 
         //recuperer l'objet
@@ -94,14 +98,12 @@ public class DetailFragment extends Fragment{
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.e(LOG_TAG, "On detach");
 
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e(LOG_TAG, "onDestroy");
         //EventBus.getDefault().removeStickyEvent(DecoratedEvent.class);
 
     }

@@ -4,7 +4,13 @@
     <color name="black">#000</color>
     <color name="grey_700">#cb1c1c1c</color>
     <color name="dark_grey_500">#4b62729f</color>
-    <color name="grey_1000">#ffaaaeb3</color>
+    <color name="grey_1000">#cb2c2c2c</color>
 
 
+
+    <color name="primary">#673ab7</color>
+    <color name="primary_dark">#512da8</color>
+    <color name="accent">#ffc400</color>
+    <color name="text_primary">#D9FFFFFF</color>
+    <color name="text_secondary">#D9000000</color>
 </resources>

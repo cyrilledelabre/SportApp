@@ -40,9 +40,18 @@ public class EventForm{
      */
     private int maxParticipants;
 
+    /**
+     * The current capacity of the event.
+     */
     private int entriesAvailable;
 
+    /**
+     * The localization of the event
+     */
     private GeoPt coordinates;
+
+
+    private String placeName;
 
     private EventForm() {}
 
@@ -56,7 +65,7 @@ public class EventForm{
      * @param maxParticipants
      */
     public EventForm(String name, String description, List<String> sports,
-                     Date startDate, Date endDate, int maxParticipants) {
+                     Date startDate, Date endDate, int maxParticipants, GeoPt coordinates, String placeName) {
         this.name = name;
         this.description = description;
         this.sports = sports == null ? null : ImmutableList.copyOf(sports);
@@ -64,11 +73,11 @@ public class EventForm{
         this.endDate = endDate == null ? null : new Date(endDate.getTime());
         this.maxParticipants = maxParticipants;
         this.entriesAvailable =maxParticipants; //init
+        this.coordinates = coordinates;
+        this.placeName = placeName;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() {return name;}
 
     public String getDescription() {
         return description;
@@ -93,6 +102,8 @@ public class EventForm{
     public int getEntriesAvailable() {
         return entriesAvailable;
     }
+
+    public String getPlaceName(){return placeName;}
 
     public GeoPt getCoordinates() { return coordinates; }
 }
