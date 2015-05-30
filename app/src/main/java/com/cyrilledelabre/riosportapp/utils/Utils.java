@@ -23,7 +23,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.widget.Toast;
 
@@ -46,6 +45,8 @@ public class Utils {
     private final static String PREFS_KEY_TOKEN = "token_access";
     private final static String PREFS_KEY_NAME = "user_name";
     private final static String PREFS_KEY_RADIUS = "radius";
+
+    private static int RADIUS = 5000;
 
 
 
@@ -85,9 +86,9 @@ public class Utils {
      * @param context
      * @param radius
      */
-    public static void saveRadius(Context context, int radius)
+    public static void saveRadius(Context context, String radius)
     {
-        saveIntToPreference(context, PREFS_KEY_RADIUS, radius);
+        saveStringToPreference(context, PREFS_KEY_RADIUS, radius);
     }
 
 
@@ -97,9 +98,9 @@ public class Utils {
      * @param context
      * @return String
      */
-    public static int getRadius(Context context)
+    public static String getRadius(Context context)
     {
-        return getIntFromPreference(context, PREFS_KEY_RADIUS);
+        return getStringFromPreference(context, PREFS_KEY_RADIUS);
     }
 
     /**
@@ -172,6 +173,27 @@ public class Utils {
     }
 
 
+    public static int getFormattedRadius(Context mContext) {
+        int radius;
+        String r = Utils.getRadius(mContext);
+        if (r != null) {
+            try {
+                radius = Integer.valueOf(r);
+                //save the static var
+                RADIUS = radius * 1000;
+            } catch (Exception e) {
+                Utils.displayToastMessage("Error : Km value is not a integer", mContext);
+                Utils.saveRadius(mContext, String.valueOf(RADIUS / 1000));
+                radius = RADIUS;
+            }
+        } else {
+            radius = RADIUS;
+        }
+        //result ok in km;
+        return radius;
+    }
+
+
     /**
      * Retrieves a String value from preference manager. If no such key exists, it will return
      * <code>null</code>.
@@ -186,59 +208,14 @@ public class Utils {
     }
 
 
-    /**
-     * Retrieves a String value from preference manager. If no such key exists, it will return
-     * <code>null</code>.
-     *
-     * @param context
-     * @param key
-     * @return
-     */
-    public static int getIntFromPreference(Context context, String key) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt(key, 0);
-    }
 
-    /**
-     * Returns a detailed description of a event.
-     *
-     * @param context
-     * @param event
-     * @return
-     */
-    public static String getEventCard(Context context, Event event) {
-        StringBuffer sb = new StringBuffer();
-        if (!TextUtils.isEmpty(event.getDescription())) {
-            sb.append(event.getDescription() + "\n");
-        }
-
-        if (null != event.getStartDate()) {
-            sb.append("\n" + getEventDate(context, event));
-        }
-
-        if(null != event.getSports()){
-            for(String e : event.getSports())
-            {
-                sb.append(e + " / ");
-            }
-            sb.append("\n");
-        }
-
-        if ((null != event.getMaxParticipants()) && (event.getEntriesAvailable() != null)) {
-
-            String res = event.getEntriesAvailable().intValue()
-                    +"/"+ event.getMaxParticipants().intValue();
-            sb.append("\n" +context.getString(R.string.seats_available,res ));
-        }
-        return sb.toString();
-    }
 
     public static String getFormattedParticipants(Context context, Event event)
     {
         StringBuffer sb = new StringBuffer();
         int participants =event.getMaxParticipants().intValue() - event.getEntriesAvailable().intValue();
         String res = participants+"/"+ event.getMaxParticipants().intValue();
-        sb.append(context.getString(R.string.seats_available,res ));
+        sb.append(context.getString(R.string.participants_available, res));
 
         return sb.toString();
     }

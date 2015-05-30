@@ -30,8 +30,8 @@ import android.widget.ListView;
 import com.cyrilledelabre.riosportapp.MainPackage.DetailEvent.DetailActivity;
 import com.cyrilledelabre.riosportapp.R;
 import com.cyrilledelabre.riosportapp.Tasks.ApiTask.EventsLoader;
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
-import com.cyrilledelabre.riosportapp.utils.EventDataAdapter;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventDataAdapter;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.util.List;
@@ -43,11 +43,12 @@ public class EventListFragment extends ListFragment implements
 
     private final String LOG_TAG = EventListFragment.class.getSimpleName();
     public static final String ARG_PAGE = "page";
-    private EventDataAdapter mAdapter;
+    private static EventDataAdapter mAdapter;
 
-    public static EventListFragment create(int pageNumber) {
+    public static EventListFragment create(int pageNumber, EventDataAdapter adapter) {
         EventListFragment fragment = new EventListFragment();
         Bundle args = new Bundle();
+        mAdapter = adapter;
         args.putInt(ARG_PAGE, pageNumber);
         fragment.setArguments(args);
 
@@ -70,8 +71,6 @@ public class EventListFragment extends ListFragment implements
         getListView().setLayoutAnimation(controller);
 
         //create adapter
-        mAdapter = new EventDataAdapter(getActivity());
-
         setEmptyText(getString(R.string.no_events));
         setListAdapter(mAdapter);
 
@@ -149,18 +148,6 @@ public class EventListFragment extends ListFragment implements
         }
     }
 
-
-
-
-    /*
-    Constructor Instance //
-     */
-    public static EventListFragment newInstance() {
-        EventListFragment f = new EventListFragment();
-        Bundle b = new Bundle();
-        f.setArguments(b);
-        return f;
-    }
 
     public void loadEvents() {
         if(isAdded())

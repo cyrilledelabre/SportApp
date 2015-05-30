@@ -7,11 +7,10 @@ import android.util.Log;
 
 import com.appspot.riosportapp.event.model.EventForm;
 import com.appspot.riosportapp.event.model.GeoPt;
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
-import com.cyrilledelabre.riosportapp.utils.EventException;
-import com.cyrilledelabre.riosportapp.utils.EventUtils;
 import com.cyrilledelabre.riosportapp.utils.Utils;
-import com.google.android.gms.location.places.Place;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventException;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventUtils;
 import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
@@ -40,9 +39,6 @@ public class addEventAsyncTask extends AsyncTask<Void, Boolean, Boolean> {
         mHolder = holder ;
         mContext = context;
     }
-
-
-
 
 
 
@@ -109,8 +105,6 @@ public class addEventAsyncTask extends AsyncTask<Void, Boolean, Boolean> {
             e.printStackTrace();
             return false;
         }
-
-
         return true;
     }
 
@@ -127,9 +121,9 @@ public class addEventAsyncTask extends AsyncTask<Void, Boolean, Boolean> {
 
     private String verifyingText(String text, String error) throws EventException
     {
-        if(text == null)
+        if (text.equals(""))
         {
-            throw  new EventException("You forgot the "+error);
+            throw new EventException("You forgot the " + error);
         }
         return text;
     }
@@ -154,27 +148,19 @@ public class addEventAsyncTask extends AsyncTask<Void, Boolean, Boolean> {
     }
 
     private GeoPt createLocalisation() throws EventException {
-        GeoPt geoPt = new GeoPt();
-        Place place=mHolder.mPlace;
+        GeoPt geoPt = mHolder.mLocalisation;
 
-        if(place == null &&  place.isDataValid())
+        if (geoPt == null)
             throw new EventException("You Forgot to set a Place ! ");
-
-        if(place.getLatLng() == null)
-            throw new EventException("latLng null ?? ");
-
-        geoPt.setLongitude((float)place.getLatLng().longitude);
-        geoPt.setLatitude((float) place.getLatLng().latitude);
 
         return geoPt;
     }
 
     private String getPlaceName()
     {
-        Place place = mHolder.mPlace;
-        if(place != null)
+        if (mHolder.mPlaceName.getText() != null)
         {
-           return (String) place.getName();
+            return mHolder.mPlaceName.getText().toString();
         }
         return null;
     }

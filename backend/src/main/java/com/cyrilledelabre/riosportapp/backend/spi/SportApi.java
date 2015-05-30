@@ -17,8 +17,6 @@ import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Work;
@@ -392,6 +390,32 @@ public class SportApi{
         return result;
     }
 
+    @ApiMethod(
+            name = "queryEventsRadius",
+            path = "queryEventsRadius/{latitude}/{longitude}/{radius}",
+            httpMethod = HttpMethod.POST
+    )
+    public List<Event> queryEventsRadius(@Named("radius") Integer radius, @Named("longitude") Double longitude, @Named("latitude") Double latitude)
+            throws UnauthorizedException {
+        if (radius != 0 && longitude != 0 && latitude != 0) {
+            LOG.info("queryEventsRadius aaa");
+            Iterable<Event> eventIterable = EventQueryForm.getQueryRadius(radius, longitude, latitude);
+            List<Event> result = new ArrayList<>(0);
+            List<Key<Profile>> organizersKeyList = new ArrayList<>(0);
+            for (Event event : eventIterable) {
+                organizersKeyList.add(Key.create(Profile.class, event.getOrganizerUserId()));
+                result.add(event);
+            }
+            // To avoid separate datastore gets for each Event, pre-fetch the Profiles.
+            ofy().load().keys(organizersKeyList);
+            return result;
+        }
+        throw new UnauthorizedException("Error Params");
+
+    }
+
+
+
     /**
      * Returns a list of Events that the user created.
      * In order to receive the websafeEventKey via the JSON params, we uses a POST method.
@@ -519,11 +543,6 @@ public class SportApi{
     }
 
 
-
-
-
-
-
     /**
      * Delete the specified Event.
      *
@@ -546,31 +565,6 @@ public class SportApi{
         if (user == null) {
             throw new UnauthorizedException("Authorization required");
         }
-
-        // Update the event with the eventForm sent from the client.
-        // Need a transaction because we need to safely preserve the number of allocated participants.
-    /*    TxResult<Boolean> result = ofy().transact(new Work<TxResult<Boolean>>() {
-            @Override
-            public TxResult<Boolean> run() {
-                // If there is no Event with the id, throw a 404 error.
-
-                if (event == null) {
-                    return new TxResult<>(new NotFoundException("No Event found with the key: " + websafeEventKey));
-                }
-                // If the user is not the owner, throw a 403 error.
-                Profile profile = ofy().load().key(Key.create(Profile.class, userId)).now();
-                if (profile == null ||
-                        !event.getOrganizerUserId().equals(userId)) {
-                    return new TxResult<>(new ForbiddenException("Only the owner can update the event."));
-                }
-                 ofy().delete().entity(event).now();
-                //we suppose everything okey
-                return new TxResult<>(true);
-
-
-                }
-        });
-        */
 
         final String userId = getUserId(user);
         Key<Event> eventKey = Key.create(websafeEventKey);

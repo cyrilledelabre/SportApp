@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
-import com.cyrilledelabre.riosportapp.utils.EventException;
-import com.cyrilledelabre.riosportapp.utils.EventUtils;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventException;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventUtils;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.io.IOException;

@@ -29,8 +29,8 @@ import android.widget.ListView;
 import com.cyrilledelabre.riosportapp.MainPackage.DetailEvent.DetailActivity;
 import com.cyrilledelabre.riosportapp.R;
 import com.cyrilledelabre.riosportapp.Tasks.ApiTask.MyEventsLoader;
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
-import com.cyrilledelabre.riosportapp.utils.EventDataAdapter;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventDataAdapter;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.util.List;

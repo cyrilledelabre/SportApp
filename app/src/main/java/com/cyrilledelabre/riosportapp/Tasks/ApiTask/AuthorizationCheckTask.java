@@ -8,7 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.utils.EventUtils;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventUtils;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 /**

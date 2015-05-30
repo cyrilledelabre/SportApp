@@ -1,8 +1,10 @@
 package com.cyrilledelabre.riosportapp.backend.form;
 
 import com.cyrilledelabre.riosportapp.backend.domain.Event;
+import com.cyrilledelabre.riosportapp.backend.utils.SphericalUtil;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
+import com.google.appengine.api.datastore.GeoPt;
 import com.google.common.collect.ImmutableList;
 import com.googlecode.objectify.cmd.Query;
 
@@ -22,23 +24,24 @@ public class EventQueryForm{
     /**
      * Enum representing a field type.
      */
-    public static enum FieldType {
+    public enum FieldType {
         STRING, INTEGER
     }
 
     /**
      * Enum representing a field.
      */
-    public static enum Field {
+    public enum Field {
         SPORT("sports ", FieldType.STRING),
         MONTH("month", FieldType.INTEGER),
-        MAX_PARTICIPANTS("maxParticipants", FieldType.INTEGER);
+        MAX_PARTICIPANTS("maxParticipants", FieldType.INTEGER),
+        RADIUS("radius", FieldType.INTEGER);
 
         private String fieldName;
 
         private FieldType fieldType;
 
-        private Field(String fieldName, FieldType fieldType) {
+        Field(String fieldName, FieldType fieldType) {
             this.fieldName = fieldName;
             this.fieldType = fieldType;
         }
@@ -51,7 +54,7 @@ public class EventQueryForm{
     /**
      * Enum representing an operator.
      */
-    public static enum Operator {
+    public enum Operator {
         EQ("=="),
         LT("<"),
         GT(">"),
@@ -61,7 +64,7 @@ public class EventQueryForm{
 
         private String queryOperator;
 
-        private Operator(String queryOperator) {
+        Operator(String queryOperator) {
             this.queryOperator = queryOperator;
         }
 
@@ -177,7 +180,6 @@ public class EventQueryForm{
         } else {
             // If we have any inequality filters, order by the field first.
             query = query.order(inequalityFilter.field.getFieldName());
-            query = query.order("name");
         }
         for (Filter filter : this.filters) {
             // Applies filters in order.
@@ -192,4 +194,33 @@ public class EventQueryForm{
         LOG.info(query.toString());
         return query;
     }
+
+    /**
+     * Returns an Objectify Query object for the specified filters.
+     *
+     * @return an Objectify Query.
+     */
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public static List<Event> getQueryRadius(int radius, double longitude, double latitude) {
+        // First check the feasibility of inequality filters.
+        Query<Event> query = ofy().load().type(Event.class);
+        List<Event> l = new ArrayList<>();
+
+        GeoPt latLng = new GeoPt((float) latitude, (float) longitude);
+        GeoPt southwest = SphericalUtil.computeOffset(latLng, radius, 225);
+        GeoPt northeast = SphericalUtil.computeOffset(latLng, radius, 45);
+
+        com.google.appengine.api.datastore.Query.GeoRegion geoRegion =
+                new com.google.appengine.api.datastore.Query.GeoRegion.Rectangle(southwest, northeast);
+
+        for (Event e : query) {
+            if (e.getCoordinates() != null && geoRegion.contains(e.getCoordinates())) {
+                l.add(e);
+                LOG.info(e.getName() + " added !");
+            }
+
+        }
+        return l;
+    }
+
 }

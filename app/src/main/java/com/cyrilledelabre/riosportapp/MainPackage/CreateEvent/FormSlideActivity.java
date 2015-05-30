@@ -35,11 +35,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.appspot.riosportapp.event.model.GeoPt;
 import com.cyrilledelabre.riosportapp.MainPackage.MainActivity;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
-import com.cyrilledelabre.riosportapp.utils.LocalisationProvider.NetworkProvider;
-import com.cyrilledelabre.riosportapp.utils.Maps.GoogleApiClientSingleton;
+import com.cyrilledelabre.riosportapp.utils.NetworkProvider;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
+import com.cyrilledelabre.riosportapp.utils.maps.GoogleApiClientSingleton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -86,6 +87,7 @@ public class FormSlideActivity extends ActionBarActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_create_events_slide);
 
+
         mHolder = new ViewHolder();
         mHolder.mGoogleApiClient = GoogleApiClientSingleton.getInstance(this).getGoogleApiClient();
         mHolder.mNetworkProvider = NetworkProvider.getInstance(this);
@@ -117,8 +119,6 @@ public class FormSlideActivity extends ActionBarActivity {
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        // Instantiate a ViewPager and a PagerAdapter.
-
         return super.onCreateView(parent, name, context, attrs);
     }
 
@@ -190,13 +190,12 @@ public class FormSlideActivity extends ActionBarActivity {
         int startHour, startMinute, startDay, startMonth, startYear;
         int endHour, endMinute, endDay, endMonth, endYear;
 
-        Place mPlace;
+        GeoPt mLocalisation;
         TextView mPlaceName;
         TextView mPlaceAddress;
 
         DecoratedEvent mDecoratedEvent;
         GoogleApiClient mGoogleApiClient;
-        //getNetwork Localisation
         NetworkProvider mNetworkProvider;
 
         boolean editMode;
@@ -208,15 +207,21 @@ public class FormSlideActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             if (requestCode == PLACE_PICKER_REQUEST && resultCode == Activity.RESULT_OK) {
-                mHolder.mPlace = PlacePicker.getPlace(data, this);
-
+                Place place = PlacePicker.getPlace(data, this);
                 //TODO hey could not find the address would you like it to give a name ??
-                mHolder.mPlaceAddress.setVisibility(View.VISIBLE);
-                mHolder.mPlaceName.setVisibility(View.VISIBLE);
-                mHolder.mPlaceName.setText(mHolder.mPlace.getName());
-                mHolder.mPlaceAddress.setText(mHolder.mPlace.getAddress());
-            } else {
+                if (place.getName() != null) {
+                    mHolder.mPlaceName.setVisibility(View.VISIBLE);
+                    mHolder.mPlaceName.setText(place.getName());
+                }
+                if (place.getAddress() != null) {
+                    mHolder.mPlaceAddress.setVisibility(View.VISIBLE);
+                    mHolder.mPlaceAddress.setText(place.getAddress());
+                }
+                mHolder.mLocalisation = new GeoPt();
+                mHolder.mLocalisation.setLongitude((float) place.getLatLng().longitude);
+                mHolder.mLocalisation.setLatitude((float) place.getLatLng().latitude);
 
+            } else {
                 super.onActivityResult(requestCode, resultCode, data);
             }
 

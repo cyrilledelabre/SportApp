@@ -14,7 +14,7 @@ import com.cyrilledelabre.riosportapp.MainPackage.CreateEvent.FormSlideActivity;
 import com.cyrilledelabre.riosportapp.MainPackage.MainEvents.MainEventsActivity;
 import com.cyrilledelabre.riosportapp.MainPackage.MyEvents.MyEventsActivity;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.SettingsActivity;
+import com.cyrilledelabre.riosportapp.utils.NetworkProvider;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.io.IOException;
@@ -36,7 +36,6 @@ public class MainActivity extends GoogleNavigationDrawer implements GAccountList
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        mAccessToken = Utils.getTokenAccess(this);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,11 +52,16 @@ public class MainActivity extends GoogleNavigationDrawer implements GAccountList
     
     @Override
     public void init(Bundle savedInstanceState) {
+
+        NetworkProvider mNetworkProvider = NetworkProvider.getInstance(getApplicationContext());
+
         GSection Home, myEvents,settingsSection, createEvents;
         String mEmailAccount,mUserName;
 
         mEmailAccount=Utils.getEmailAccount(this);
         mUserName=Utils.getProfileName(this);
+        mAccessToken = Utils.getTokenAccess(this);
+
         if(mUserName==null && mEmailAccount != null)
         {
                 mUserName =  mEmailAccount.substring(0, mEmailAccount.indexOf("@"));

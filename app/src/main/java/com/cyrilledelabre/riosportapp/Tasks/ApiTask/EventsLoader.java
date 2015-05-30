@@ -21,9 +21,9 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
-import com.cyrilledelabre.riosportapp.utils.EventException;
-import com.cyrilledelabre.riosportapp.utils.EventUtils;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventException;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventUtils;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.io.IOException;
@@ -33,16 +33,18 @@ public class EventsLoader extends AsyncTaskLoader<List<DecoratedEvent>> {
 
     private final String LOG_TAG = EventsLoader.class.getSimpleName();
     private Exception mException;
+    private Context mContext;
 
     public EventsLoader(Context context) {
         super(context);
+        mContext = context;
     }
 
     @Override
     public List<DecoratedEvent> loadInBackground() {
         try {
             //EventUtils.getProfile();
-            return EventUtils.getEvents();
+            return EventUtils.getEventsFromRadius(Utils.getFormattedRadius(mContext));
         } catch (IOException e) {
             Log.e(LOG_TAG, "Failed to get events", e);
             mException = e;

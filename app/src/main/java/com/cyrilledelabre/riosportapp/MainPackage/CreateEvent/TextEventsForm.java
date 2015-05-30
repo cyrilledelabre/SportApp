@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.appspot.riosportapp.event.model.Event;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
 
 import de.greenrobot.event.EventBus;
 

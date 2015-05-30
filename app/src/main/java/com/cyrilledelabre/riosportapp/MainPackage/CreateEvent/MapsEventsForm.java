@@ -23,10 +23,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.appspot.riosportapp.event.model.Event;
+import com.appspot.riosportapp.event.model.GeoPt;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
-import com.cyrilledelabre.riosportapp.utils.Maps.PlaceAutocompleteAdapter;
+import com.cyrilledelabre.riosportapp.utils.NetworkProvider;
 import com.cyrilledelabre.riosportapp.utils.Utils;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
+import com.cyrilledelabre.riosportapp.utils.maps.PlaceAutocompleteAdapter;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -67,11 +70,6 @@ public class MapsEventsForm extends Fragment {
     private PlaceAutocompleteAdapter mAdapter;
 
     private AutoCompleteTextView mAutocompleteView;
-
-    private TextView mPlaceDetailsText;
-
-    private TextView mPlaceDetailsAttribution;
-
     private static FormSlideActivity.ViewHolder mHolder;
 
     private SimpleDateFormat dateFormatter;
@@ -109,9 +107,6 @@ public class MapsEventsForm extends Fragment {
         super.onCreate(savedInstanceState);
         mContext =getActivity().getApplicationContext();
         mPageNumber = getArguments().getInt(ARG_PAGE);
-
-
-
 
         dateFormatter = new SimpleDateFormat("dd-MMM-yy", Locale.US);
         timeFormatter = new SimpleDateFormat("HH-mm", Locale.US);
@@ -205,18 +200,20 @@ public class MapsEventsForm extends Fragment {
     }
     private void setTimeField() {
         //date
-        mHolder.mStartTimeView.setOnClickListener( new View.OnClickListener(){
+        mHolder.mStartTimeView.setOnClickListener(new View.OnClickListener() {
             Calendar newCalendar = Calendar.getInstance();
+
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     public void onTimeSet(TimePicker view, int hour, int minutes) {
-                        mHolder.startMinute= minutes; mHolder.startHour=hour;
-                        mHolder.mStartTimeView.setText( mHolder.startHour+"h"+ mHolder.startMinute);
+                        mHolder.startMinute = minutes;
+                        mHolder.startHour = hour;
+                        mHolder.mStartTimeView.setText(mHolder.startHour + "h" + mHolder.startMinute);
 
                     }
 
-                },newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE),false).show();
+                }, newCalendar.get(Calendar.HOUR), newCalendar.get(Calendar.MINUTE), false).show();
             }
         });
 
@@ -242,6 +239,7 @@ public class MapsEventsForm extends Fragment {
         mHolder.mEndDateView.setText(Utils.getFormattedDay(mContext, event.getEndDate()));
         mHolder.mStartTimeView.setText(Utils.getFormattedTime(mContext, event.getStartDate()));
         mHolder.mEndTimeView.setText(Utils.getFormattedTime(mContext, event.getEndDate()));
+        mHolder.mPlaceName.setText(event.getPlaceName());
     }
 
 
@@ -255,14 +253,14 @@ public class MapsEventsForm extends Fragment {
                 try {
                     PlacePicker.IntentBuilder intentBuilder =
                             new PlacePicker.IntentBuilder();
-                    intentBuilder.setLatLngBounds(mHolder.mNetworkProvider.getCurrentLocation());
+                    intentBuilder.setLatLngBounds(NetworkProvider.getCurrentLocation());
                     Intent intent = intentBuilder.build(mContext.getApplicationContext());
                     getActivity().startActivityForResult(intent, PLACE_PICKER_REQUEST);
 
                 } catch (GooglePlayServicesRepairableException e) {
                     Log.e(LOG_TAG,"GooglePlacesPickup error "+ e);
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, "GooglePlacesPickup error " + e);
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    Log.e(LOG_TAG, "GooglePlayServicesNotAvailableException error " + e);
                 }
             }
         });
@@ -278,18 +276,12 @@ public class MapsEventsForm extends Fragment {
 
         // Register a listener that receives callbacks when a suggestion has been selected
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
-
-        // Retrieve the TextViews that will display details and attributions of the selected place.
-        mPlaceDetailsText = (TextView) view.findViewById(R.id.place_details);
-        mPlaceDetailsAttribution = (TextView) view.findViewById(R.id.place_attribution);
-
         // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
         // the entire world.
-        mAdapter = new PlaceAutocompleteAdapter(mContext, android.R.layout.simple_list_item_1,
-                mHolder.mGoogleApiClient, mHolder.mNetworkProvider.getCurrentLocation(), null);
+        mAdapter = new PlaceAutocompleteAdapter(mContext, R.layout.my_list_item,
+                mHolder.mGoogleApiClient, NetworkProvider.getCurrentLocation(), null);
+
         mAutocompleteView.setAdapter(mAdapter);
-
-
     }
 
 
@@ -325,10 +317,11 @@ public class MapsEventsForm extends Fragment {
                 return;
             }
             // Get the Place object from the buffer.
-            final Place place = places.get(0);
-            Log.e(LOG_TAG,"place latlong " +  place.getLatLng().toString());
+            Place place = places.get(0);
+            mHolder.mLocalisation = new GeoPt();
+            mHolder.mLocalisation.setLongitude((float) place.getLatLng().longitude);
+            mHolder.mLocalisation.setLatitude((float) place.getLatLng().latitude);
 
-            mHolder.mPlace = place;
             final CharSequence name = place.getName();
             if (name != null) {
                 mHolder.mPlaceName.setVisibility(View.VISIBLE);
@@ -338,7 +331,7 @@ public class MapsEventsForm extends Fragment {
             final CharSequence address = place.getAddress();
             if (address != null) {
                 mHolder.mPlaceAddress.setVisibility(View.VISIBLE);
-                mHolder. mPlaceAddress.setText(address.toString());
+                mHolder.mPlaceAddress.setText(address.toString());
             }
             places.release();
         }

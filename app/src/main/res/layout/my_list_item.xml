@@ -1,0 +1,10 @@
+<!--Custom list view item to fix android default colors when creating a PlaceAutocomplete for addresses display -->
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    style="?android:attr/dropDownItemStyle"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:textAppearance="?android:attr/textAppearanceMediumInverse"
+    android:textColor="#b6000000" />

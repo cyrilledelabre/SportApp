@@ -3,6 +3,7 @@ package com.cyrilledelabre.riosportapp.MainPackage.DetailEvent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.appspot.riosportapp.event.model.Event;
+import com.appspot.riosportapp.event.model.GeoPt;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.utils.DecoratedEvent;
-import com.cyrilledelabre.riosportapp.utils.EventUtils;
 import com.cyrilledelabre.riosportapp.utils.Utils;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventUtils;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 
@@ -26,7 +35,7 @@ import de.greenrobot.event.EventBus;
  * On recupere les données avec un Intent
  * Et on les affiche dans la view
  */
-public class DetailFragment extends Fragment{
+public class DetailFragment extends Fragment implements OnMapReadyCallback {
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
 
     private DecoratedEvent mDecoratedEvent;
@@ -36,11 +45,15 @@ public class DetailFragment extends Fragment{
     private TextView mDateView;
     private TextView mSportsView;
     private TextView mParticipantsView;
+    private TextView mPlaceView;
     private Button mRegisterButton;
+
+    private GoogleMap mGoogleMap;
+    private SupportMapFragment mMapFragment;
 
 
     public DetailFragment() {
-        setHasOptionsMenu(true); //otherwise not call the oncreatemenuoption
+        setHasOptionsMenu(true);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,11 +64,14 @@ public class DetailFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         View rootView = inflater.inflate(R.layout.fragment_detail_event, container, false);
+        if (savedInstanceState != null)
+            return rootView;
+
         mDecoratedEvent = EventBus.getDefault().getStickyEvent(DecoratedEvent.class);
 
-        //recuperer l'objet
-        // on set la vue
+        mPlaceView = (TextView) rootView.findViewById(R.id.detail_place_textview);
         mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
         mTitleView = (TextView) rootView.findViewById(R.id.detail_title_textview);
         mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
@@ -78,41 +94,12 @@ public class DetailFragment extends Fragment{
     }
 
 
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //EventBus.getDefault().removeStickyEvent(DecoratedEvent.class);
-
-    }
-
     private void updateView()
     {
         Event instance = mDecoratedEvent.getEvent();
 
-        mTitleView.setText(instance.getName());
+        if (instance.getName() != null)
+            mTitleView.setText(instance.getName());
 
         if(instance.getDescription() !=null)
             mDescriptionView.setText(instance.getDescription());
@@ -121,11 +108,16 @@ public class DetailFragment extends Fragment{
             mSportsView.setText(Utils.getSports(instance));
 
         if(instance.getStartDate() !=null)
-            mDateView.setText(Utils.getEventDate(getActivity(),instance));
+            mDateView.setText(Utils.getEventDate(getActivity(), instance));
 
         if((null != instance.getMaxParticipants()) && (instance.getEntriesAvailable() != null))
-            mParticipantsView.setText(Utils.getFormattedParticipants(getActivity(),instance));
+            mParticipantsView.setText(Utils.getFormattedParticipants(getActivity(), instance));
 
+        if (instance.getPlaceName() != null)
+            mPlaceView.setText(instance.getPlaceName());
+
+        if (instance.getCoordinates() != null)
+            setUpMap();
 
         mRegisterButton.setText(mDecoratedEvent.isRegistered() ? R.string.unregister
                 : R.string.register);
@@ -133,10 +125,36 @@ public class DetailFragment extends Fragment{
 
     }
 
+
+    private void setUpMap() {
+        if (mMapFragment == null) {
+            mMapFragment = SupportMapFragment.newInstance();
+            FragmentTransaction fragmentTransaction =
+                    getChildFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.maps, mMapFragment);
+            fragmentTransaction.commit();
+            mMapFragment.getMapAsync(this);
+        }
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
+        GeoPt geoPt = mDecoratedEvent.getEvent().getCoordinates();
+        LatLng latLng = new LatLng(geoPt.getLatitude(), geoPt.getLongitude());
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        Marker marker = mGoogleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+        );
+    }
+
     private void registerToEvent(DecoratedEvent DecoratedEvent) {
         new RegistrationAsyncTask(DecoratedEvent).execute();
     }
 
+
+    //TODO better unregister/register AsyncTask
     class RegistrationAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
         private final DecoratedEvent mDecoratedEvent;
@@ -161,7 +179,6 @@ public class DetailFragment extends Fragment{
                         boolean success = EventUtils.unregisterFromEvent(mDecoratedEvent.getEvent());
                         if (success) {
                             Log.i(LOG_TAG,"unregister success");
-                            //TODO local unregister better
                             mDecoratedEvent.getEvent().setEntriesAvailable(entriesAvailable+1);
                             mDecoratedEvent.setRegistered(false);
                         }
@@ -170,10 +187,8 @@ public class DetailFragment extends Fragment{
                         boolean success = EventUtils.registerForEvent(mDecoratedEvent.getEvent());
                         if (success) {
                             Log.i(LOG_TAG,"register success");
-                            //TODO local unregister better
                             mDecoratedEvent.getEvent().setEntriesAvailable(entriesAvailable-1);
                             mDecoratedEvent.setRegistered(true);
-
                         }
                         return success;
                     }
@@ -181,7 +196,7 @@ public class DetailFragment extends Fragment{
                     mException = e;
                 }
             } catch(Exception e) {
-                //logged
+                Log.e(LOG_TAG, "Exception :  " + e.getMessage());
             }
             return null;
         }
@@ -189,23 +204,14 @@ public class DetailFragment extends Fragment{
         @Override
         protected void onPostExecute(Boolean result) {
             if (null != result && result.booleanValue()) {
-                // success
-                Log.i(LOG_TAG,"onPostExecuteSuccess");
-
                 updateView();
+                String message = ((mDecoratedEvent.isRegistered()) ? "Registered " : "Unregistered") + " to " + mDecoratedEvent.getEvent().getName();
+                Utils.displayToastMessage(message, getActivity());
             } else {
-                // failure
-                Log.e(LOG_TAG, "Failed to perform registration update", mException);
                 if (mException != null) {
-                    Utils.displayNetworkErrorMessage(getActivity());
+                    Utils.displayToastMessage(mException.getMessage(), getActivity());
                 }
             }
         }
     }
-
-
-
-
-
-
 }

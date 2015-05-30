@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="detail_description_title_textview">Description</string>
     <string name="seats_max">Max Participants: %1$s</string>
-    <string name="seats_available">Places Available: %1$s</string>
+    <string name="detail_description_title_textview">Description</string>
+    <string name="detail_place_title_textview">Address</string>
+    <string name="participants_available">Places Available: %1$s</string>
     <string name="register">Register</string>
     <string name="unregister">Unregister</string>
 </resources>

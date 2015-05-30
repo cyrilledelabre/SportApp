@@ -26,29 +26,31 @@ import android.view.ViewGroup;
 
 import com.cyrilledelabre.riosportapp.MainPackage.CreateEvent.TextForm;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.utils.common.SlidingTabLayout;
+import com.cyrilledelabre.riosportapp.utils.eventUtils.EventDataAdapter;
+import com.cyrilledelabre.riosportapp.utils.customLayouts.SlidingTabLayout;
 
 
 /**
- * A basic sample which shows how to use {@link  com.cyrilledelabre.riosportapp.utils.common.SlidingTabLayout}
+ * A basic sample which shows how to use {@link  com.cyrilledelabre.riosportapp.utils.customLayouts.SlidingTabLayout}
  * to display a custom {@link ViewPager} title strip which gives continuous feedback to the user
  * when scrolling.
  */
 public class EventsListFragment extends Fragment {
     public static final int NUM_PAGES = 2;
-    static final String LOG_TAG = "SlidingTabsBasicFragment";
+    static final String LOG_TAG = "EventsListFragment";
 
     /**
      * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
      * above, but is designed to give continuous feedback to the user when scrolling.
      */
     private SlidingTabLayout mSlidingTabLayout;
-
     /**
      * A {@link ViewPager} which will be used in conjunction with the {@link SlidingTabLayout} above.
      */
     private ViewPager mViewPager;
 
+
+    private EventDataAdapter mAdapter;
     /**
      * Inflates the {@link View} which will be displayed by this {@link Fragment}, from the app's
      * resources.
@@ -73,6 +75,8 @@ public class EventsListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         //TODO editname
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        mAdapter = new EventDataAdapter(getActivity());
+
         mViewPager.setAdapter(new EventsSlideAdapter(getActivity().getSupportFragmentManager()));
 
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
@@ -113,9 +117,9 @@ public class EventsListFragment extends Fragment {
             switch (position)
             {
                 case 0:
-                    return EventListFragment.create(position);
+                    return EventListFragment.create(position, mAdapter);
                 default :
-                    return EventMapFragment.create(position);
+                    return EventMapFragment.create(position, mAdapter);
             }
         }
 

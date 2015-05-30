@@ -4,25 +4,30 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:gravity="center_vertical"
-        android:layout_gravity="left"
+        android:layout_gravity="top"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:padding="16dp"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:gravity="top">
 
-        <!-- Header: Title, Date -->
-        <TextView
-            android:text="Rugby Tournament"
-            android:fontFamily="sans-serif-condensed"
-            android:id="@+id/detail_title_textview"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textColor="@color/black"
-            android:textAppearance="?android:textAppearanceLarge"
-            android:textSize="24sp" />
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            card_view:cardCornerRadius="4dp"
+            android:elevation="2dp"
+            android:focusable="true">
 
+
+            <!-- Header: Title, Date -->
         <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <LinearLayout
             android:gravity="center_horizontal"
             android:layout_height="match_parent"
             android:layout_marginTop="16dp"
@@ -39,7 +44,17 @@
 
 
                 <TextView
-                    android:text="no date"
+                    android:text="No Title"
+                    android:fontFamily="sans-serif-condensed"
+                    android:id="@+id/detail_title_textview"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/black"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:text="No date"
                     android:id="@+id/detail_date_textview"
                     android:fontFamily="sans-serif-condensed"
                     android:layout_height="wrap_content"
@@ -48,9 +63,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-
-                    android:text="no sports"
-
+                    android:text="No sports"
                     android:id="@+id/detail_sports_textview"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -69,14 +82,17 @@
                 android:orientation="vertical">
 
                 <ImageView
-
                     android:id="@+id/detail_icon"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:padding="2dip"
+                    android:src="@drawable/ic_launcher"
+                    android:contentDescription="sport icon" />
+
 
                 <TextView
                     android:text="0/0"
-
                     android:id="@+id/detail_participants_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -90,29 +106,63 @@
             android:layout_marginRight="0dp"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <TextView
                 android:text="@string/detail_description_title_textview"
                 android:textSize="16sp"
                 android:textAppearance="?android:textAppearanceLarge"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
             <TextView
                 android:id="@+id/detail_description_textview"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:textColor="@color/grey_700"
                 android:textSize="16sp"
                 android:layout_marginBottom="10dp" />
+
+
+            <TextView
+                android:text="@string/detail_place_title_textview"
+                android:textSize="16sp"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/detail_place_textview"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_marginBottom="10dp" />
+
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/maps"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                tools:context="com.rogcg.androidgmaps.MainActivity"
+                tools:ignore="MergeRootFrame"
+                android:padding="10dp"
+                android:transitionGroup="false"></RelativeLayout>
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Join !"
+                android:text="Register"
                 android:id="@+id/detail_register_button" />
+
+
         </LinearLayout>
+
+
+        </LinearLayout>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
+
 </ScrollView>

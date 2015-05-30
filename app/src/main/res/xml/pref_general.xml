@@ -1,21 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <EditTextPreference
-        android:key="@string/pref_display_name_key"
-        android:title="@string/pref_display_name_title"
-        android:defaultValue="@string/pref_display_name_default"
-        android:selectAllOnFocus="true"
-        android:inputType="text"
-        android:singleLine="true"
-        android:maxLines="1" />
-
+        android:title="Your Name"
+        android:key="user_name"
+        android:summary="Change your username"></EditTextPreference>
     <EditTextPreference
-        android:key="@string/pref_location_key"
-        android:title="@string/pref_location_title"
-        android:defaultValue="@string/pref_location_default"
-        android:selectAllOnFocus="true"
-        android:inputType="text"
-        android:singleLine="true"
-        android:maxLines="1" />
-
+        android:title="Km Localisation"
+        android:key="radius"
+        android:inputType="number"
+        android:numeric="integer"
+        android:summary="Please provide preference km"
+        android:defaultValue="50"></EditTextPreference>
 </PreferenceScreen>

@@ -21,7 +21,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-
                 android:textAppearance="?android:textAppearanceLarge"
                 android:textSize="24sp"
                 android:padding="10dp" />
@@ -31,7 +30,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="@color/grey_700"
                 android:padding="5dp" />
 
             <EditText
@@ -47,14 +45,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="@color/grey_700"
                 android:paddingTop="10dp" />
 
             <EditText
                 android:id="@+id/descEvent"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/grey_700"
                 android:textSize="16sp"
                 android:hint="Description"
                 />
