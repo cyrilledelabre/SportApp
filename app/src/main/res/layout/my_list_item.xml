@@ -1,4 +1,8 @@
-<!--Custom list view item to fix android default colors when creating a PlaceAutocomplete for addresses display -->
+<!--
+
+Custom list view item to fix android default colors when creating a PlaceAutocomplete for addresses display
+
+-->
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"

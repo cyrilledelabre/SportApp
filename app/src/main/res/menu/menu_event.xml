@@ -4,14 +4,5 @@
     tools:context="com.cyrilledelabre.riosportapp.MainPackage.MainEvents.MainEventsActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item
-        android:id="@+id/action_reload"
-        android:title="@string/reload"
-        android:icon="@drawable/ic_action_navigation_refresh"
-        app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/action_clear_account"
-        android:title="@string/action_clear_account"
-        app:showAsAction="never"/>
 </menu>

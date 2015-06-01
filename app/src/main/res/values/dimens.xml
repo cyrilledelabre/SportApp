@@ -7,8 +7,4 @@
     <dimen name="title">30sp</dimen>
     <dimen name="subtitle">20sp</dimen>
     <dimen name="description">10sp</dimen>
-
-
-
-
 </resources>

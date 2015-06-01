@@ -48,26 +48,29 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import de.greenrobot.event.EventBus;
 
 /**
- * Demonstrates a "screen-slide" animation using a {@link ViewPager}. Because
- * {@link ViewPager} automatically plays such an animation when calling
- * {@link ViewPager#setCurrentItem(int)}, there isn't any animation-specific
- * code in this sample.
  *
- * <p>
- * This sample shows a "next" button that advances the user to the next step in
- * a wizard, animating the current screen out (to the left) and the next screen
- * in (from the right). The reverse animation is played when the user presses
- * the "previous" button.
- * </p>
+ *  A "screen-slide" animation using a {@link ViewPager} for creating a new sport event.
+ *  First screen-slide asks for the title, description, and number of participants.
+ *  Second asks for the place with PlacePicker {@link PlacePicker} or with AutoComplete
+ *  {@link android.widget.AutoCompleteTextView} from GooglePlaces
+ *  and the date with {@link android.widget.DatePicker} and time with
+ *  {@link android.widget.TimePicker} for the beginning and the end of the sport event.
  *
- * @see TextForm
  */
 public class FormSlideActivity extends ActionBarActivity {
     /**
-     * The number of pages (wizard steps) to show in this demo.
+     * The number of pages to show.
      */
     public static final int NUM_PAGES = 3;
-    private final String LOG_TAG = TextEventsForm.class.getSimpleName();
+    /**
+     * Log tag
+     */
+    private final String LOG_TAG = FormSlideActivity.class.getSimpleName();
+    /**
+     * OnActivityResult for the place picker request
+     * It's performed here instead of in the {@link MapsEventsForm} fragment.
+     * (could have been the other place)
+     */
     private static int PLACE_PICKER_REQUEST = 1;
 
     /**
@@ -75,19 +78,21 @@ public class FormSlideActivity extends ActionBarActivity {
      * to access previous and next wizard steps.
      */
     private ViewPager mPager;
-    public ViewHolder mHolder;
     /**
-     * The pager adapter, which provides the pages to the view pager widget.
+     * The holder, which handles the data between the different fragments.
      */
-    private PagerAdapter mPagerAdapter;
+    public ViewHolder mHolder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_create_events_slide);
-
-
+        /**
+         * creating Network Provider, Google API Client and getting (if has) the mDecoratedEvent
+         * from the past Activity
+         */
         mHolder = new ViewHolder();
         mHolder.mGoogleApiClient = GoogleApiClientSingleton.getInstance(this).getGoogleApiClient();
         mHolder.mNetworkProvider = NetworkProvider.getInstance(this);
@@ -96,7 +101,7 @@ public class FormSlideActivity extends ActionBarActivity {
 
         t.run();
         mPager = (ViewPager) findViewById(R.id.pager);//TODO a modifier le nom du id
-        mPagerAdapter = new FormSlideAdapter(getSupportFragmentManager());
+        PagerAdapter mPagerAdapter = new FormSlideAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -109,13 +114,21 @@ public class FormSlideActivity extends ActionBarActivity {
 
     }
 
-    Thread t = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            mHolder.mGoogleApiClient.connect();
-            mHolder.mNetworkProvider.activateLocationProvider();
-        }
-    });
+
+    /**
+     * launching low tasks in another thread
+     * TODO see how to pass params and launch more stuff
+     *
+     */
+    Thread t = new Thread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    mHolder.mGoogleApiClient.connect();
+                    mHolder.mNetworkProvider.activateLocationProvider();
+                }
+            }
+    );
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
@@ -126,7 +139,7 @@ public class FormSlideActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // Navigate "up" the demo structure to the launchpad activity.
+                // Navigate "up" the structure to the launchpad activity.
                 // See http://developer.android.com/design/patterns/navigation.html
                 // for more.
                 NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
@@ -150,9 +163,15 @@ public class FormSlideActivity extends ActionBarActivity {
 
     }
 
+
+    /**
+     * onCreateOptionMenu
+     * creates on the fly menu option with previous or next/finish button to switch betweens
+     * the different view from the FormSlideActivity
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //create on the fly menu options previous / next|finish button
+        //create on the fly menu options with previous / next|finish button
         MenuItem prev = menu.add(
                 Menu.NONE,
                 R.id.action_previous,
@@ -175,7 +194,11 @@ public class FormSlideActivity extends ActionBarActivity {
     }
 
 
-
+    /**
+     * Simple ViewHolder containing all the data before creating {@link addEventAsyncTask} and
+     * sending the event
+     * It helps to switch between different Fragments and it's not maybe the best choice
+     */
     protected class ViewHolder{
          TextView mTitleView;
          TextView mDescriptionView;
@@ -228,8 +251,8 @@ public class FormSlideActivity extends ActionBarActivity {
     }
 
     /**
-     * A simple pager adapter that represents  {@link TextForm}
-     * objects, in sequence.
+     * A simple pager adapter that represents a {@link TextEventsForm} fragment , a {@link MapsEventsForm}
+     * and the final {@link TextForm} for switching between the pages.
      */
     public class FormSlideAdapter extends FragmentStatePagerAdapter {
         public FormSlideAdapter(android.support.v4.app.FragmentManager fm) {

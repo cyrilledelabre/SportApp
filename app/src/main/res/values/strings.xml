@@ -21,10 +21,6 @@
     <string name="toast_no_google_account_selected">No Google Account Selected</string>
     <string name="toast_exception_checking_authorization">Exception checking authorization</string>
     <string name="toast_no_google_accounts_registered">No Google Accounts Registered</string>
-    <string name="toast_only_one_google_account_registered">Your only registered Google account was
-    selected
-    </string>
-    <string name="welcome">Welcome !</string>
 
 
     <string name="toast_facebook_error">Error with Facebook connection</string>
@@ -33,21 +29,9 @@
     <string name="select_account_for_access">Select the account to access Rio Sport App</string>
     <string name="gms_not_available">Google Play services is not available</string>
     <string name="clear_account_message">Are you sure you want to clear the saved account? If you decide to do so, application will exit.</string>
-    <string name="reload">Reload</string>
+
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="place_details">Place details</string>
-
-
-    <string name="action_finish">Finish</string>
-    <string name="action_next">Next</string>
-    <string name="action_previous">Previous</string>
-    <string name="title_screen_slide">Test</string>
-    <string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Lorem Ipsum</string>
-
-    <string name="lorem_ipsum"><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et magna ut erat elementum cursus in quis ipsum. Nam faucibus ultrices eros, vel tempor leo semper sit amet. Duis magna quam, congue vitae interdum nec, condimentum ut lectus. Sed commodo venenatis eros a dignissim. Nunc adipiscing turpis nec magna venenatis at ultricies ipsum bibendum. Sed volutpat urna quis nisi vulputate egestas. Etiam eu dui a enim lacinia dapibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.\n\nPhasellus orci mi, eleifend nec congue id, volutpat at neque. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer semper velit vel leo rutrum sed fermentum elit porta.]]></string>
 
 </resources>

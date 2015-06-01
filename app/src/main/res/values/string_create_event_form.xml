@@ -11,7 +11,15 @@
         <item>@string/event3</item>
         <item>@string/event4</item>
     </string-array>
-
-
     <string name="eventtype">Choose one Sport</string>
+
+
+
+    <string name="action_finish">Finish</string>
+    <string name="action_next">Next</string>
+    <string name="action_previous">Previous</string>
+
+
+    <string name="place_details">Place details</string>
+
 </resources>

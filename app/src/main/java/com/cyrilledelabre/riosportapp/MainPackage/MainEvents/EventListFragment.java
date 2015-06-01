@@ -32,7 +32,6 @@ import com.cyrilledelabre.riosportapp.R;
 import com.cyrilledelabre.riosportapp.Tasks.ApiTask.EventsLoader;
 import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
 import com.cyrilledelabre.riosportapp.utils.eventUtils.EventDataAdapter;
-import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.util.List;
 
@@ -134,7 +133,7 @@ public class EventListFragment extends ListFragment implements
                                List<DecoratedEvent> data) {
         EventsLoader eventsLoader = (EventsLoader) loader;
         if (eventsLoader.getException() != null) {
-            Utils.displayNetworkErrorMessage(getActivity());
+            //Utils.displayNetworkErrorMessage(getActivity());
             return;
         }
 

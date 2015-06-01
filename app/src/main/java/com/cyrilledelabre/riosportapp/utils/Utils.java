@@ -154,24 +154,6 @@ public class Utils {
     }
 
 
-    /**
-     * Saves a int value under the provided key in the preference manager. If <code>value</code>
-     * is <code>0</code>, then the provided key will be removed from the preferences.
-     *
-     * @param context
-     * @param key
-     * @param value
-     */
-    public static void saveIntToPreference(Context context, String key, int value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        if (value == 0) {
-            // we want to remove
-            pref.edit().remove(key).apply();
-        } else {
-            pref.edit().putInt(key, value).apply();
-        }
-    }
-
 
     public static int getFormattedRadius(Context mContext) {
         int radius;
