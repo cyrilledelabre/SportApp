@@ -38,7 +38,7 @@ import android.widget.TextView;
 import com.appspot.riosportapp.event.model.GeoPt;
 import com.cyrilledelabre.riosportapp.MainPackage.MainActivity;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.utils.NetworkProvider;
+import com.cyrilledelabre.riosportapp.utils.localisationProvider.NetworkProvider;
 import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
 import com.cyrilledelabre.riosportapp.utils.maps.GoogleApiClientSingleton;
 import com.google.android.gms.common.api.GoogleApiClient;

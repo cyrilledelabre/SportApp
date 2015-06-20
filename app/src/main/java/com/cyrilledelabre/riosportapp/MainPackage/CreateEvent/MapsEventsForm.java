@@ -25,7 +25,7 @@ import android.widget.TimePicker;
 import com.appspot.riosportapp.event.model.Event;
 import com.appspot.riosportapp.event.model.GeoPt;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.utils.NetworkProvider;
+import com.cyrilledelabre.riosportapp.utils.localisationProvider.NetworkProvider;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 import com.cyrilledelabre.riosportapp.utils.eventUtils.DecoratedEvent;
 import com.cyrilledelabre.riosportapp.utils.maps.PlaceAutocompleteAdapter;

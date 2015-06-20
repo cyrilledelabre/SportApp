@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.cyrilledelabre.riosportapp.MainPackage.DetailEvent.DetailActivity;
 import com.cyrilledelabre.riosportapp.R;
 import com.cyrilledelabre.riosportapp.utils.eventUtils.EventDataAdapter;
-import com.cyrilledelabre.riosportapp.utils.NetworkProvider;
+import com.cyrilledelabre.riosportapp.utils.localisationProvider.NetworkProvider;
 import com.cyrilledelabre.riosportapp.utils.maps.PopupAdapter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

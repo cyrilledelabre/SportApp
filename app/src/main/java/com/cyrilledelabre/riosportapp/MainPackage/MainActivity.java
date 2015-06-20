@@ -14,7 +14,7 @@ import com.cyrilledelabre.riosportapp.MainPackage.CreateEvent.FormSlideActivity;
 import com.cyrilledelabre.riosportapp.MainPackage.MainEvents.MainEventsActivity;
 import com.cyrilledelabre.riosportapp.MainPackage.MyEvents.MyEventsActivity;
 import com.cyrilledelabre.riosportapp.R;
-import com.cyrilledelabre.riosportapp.utils.NetworkProvider;
+import com.cyrilledelabre.riosportapp.utils.localisationProvider.NetworkProvider;
 import com.cyrilledelabre.riosportapp.utils.Utils;
 
 import java.io.IOException;
