@@ -98,7 +98,7 @@ public class Utils {
      * @param context
      * @return String
      */
-    public static String getRadius(Context context)
+    private static String getRadius(Context context)
     {
         return getStringFromPreference(context, PREFS_KEY_RADIUS);
     }
@@ -164,7 +164,7 @@ public class Utils {
                 //save the static var
                 RADIUS = radius;
             } catch (Exception e) {
-                Utils.displayToastMessage("Error : Km value is not a integer", mContext);
+                Utils.displayToastMessage("Error : Radius value is not a number ! ", mContext);
                 Utils.saveRadius(mContext, String.valueOf(RADIUS));
                 radius = RADIUS;
             }

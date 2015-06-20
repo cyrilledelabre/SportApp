@@ -398,7 +398,6 @@ public class SportApi{
     public List<Event> queryEventsRadius(@Named("radius") Integer radius, @Named("longitude") Double longitude, @Named("latitude") Double latitude)
             throws UnauthorizedException {
         if (radius != 0 && longitude != 0 && latitude != 0) {
-            LOG.info("queryEventsRadius aaa");
             Iterable<Event> eventIterable = EventQueryForm.getQueryRadius(radius, longitude, latitude);
             List<Event> result = new ArrayList<>(0);
             List<Key<Profile>> organizersKeyList = new ArrayList<>(0);
@@ -592,8 +591,6 @@ public class SportApi{
         }
 
         ofy().delete().entity(event).now();
-
-        // NotFoundException is actually thrown here.
         return new WrappedBoolean(true);
     }
 

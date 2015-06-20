@@ -44,7 +44,7 @@ public class EventsLoader extends AsyncTaskLoader<List<DecoratedEvent>> {
     public List<DecoratedEvent> loadInBackground() {
         try {
             //EventUtils.getProfile();
-            return EventUtils.getEventsFromRadius(Utils.getFormattedRadius(mContext));
+            return EventUtils.getEventsFromRadius();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Failed to get events", e);
             mException = e;

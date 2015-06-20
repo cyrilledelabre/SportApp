@@ -202,6 +202,7 @@ public class EventQueryForm{
      */
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public static List<Event> getQueryRadius(int radius, double longitude, double latitude) {
+        LOG.info("Radius  : " + radius  + " long"  + longitude + " lat : " + latitude);
         // First check the feasibility of inequality filters.
         Query<Event> query = ofy().load().type(Event.class);
         List<Event> l = new ArrayList<>();
