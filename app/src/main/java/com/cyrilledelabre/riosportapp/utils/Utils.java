@@ -46,7 +46,7 @@ public class Utils {
     private final static String PREFS_KEY_NAME = "user_name";
     private final static String PREFS_KEY_RADIUS = "radius";
 
-    private static int RADIUS = 5000;
+    public static int RADIUS = 5000;
 
 
 
@@ -155,17 +155,17 @@ public class Utils {
 
 
 
-    public static int getFormattedRadius(Context mContext) {
+    public static int getFormattedRadiusInKm(Context mContext) {
         int radius;
         String r = Utils.getRadius(mContext);
         if (r != null) {
             try {
                 radius = Integer.valueOf(r);
                 //save the static var
-                RADIUS = radius * 1000;
+                RADIUS = radius;
             } catch (Exception e) {
                 Utils.displayToastMessage("Error : Km value is not a integer", mContext);
-                Utils.saveRadius(mContext, String.valueOf(RADIUS / 1000));
+                Utils.saveRadius(mContext, String.valueOf(RADIUS));
                 radius = RADIUS;
             }
         } else {
@@ -173,6 +173,12 @@ public class Utils {
         }
         //result ok in km;
         return radius;
+    }
+
+
+    public static int getFormattedRadiusInMeters(Context mContext)
+    {
+        return getFormattedRadiusInKm(mContext)*1000;
     }
 
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cyrilledelabre.riosportapp.utils.Maps;
+package com.cyrilledelabre.riosportapp.utils.maps;
 
 import com.google.android.gms.maps.model.LatLng;
 

@@ -1,4 +1,4 @@
-package com.cyrilledelabre.riosportapp.utils.Maps;
+package com.cyrilledelabre.riosportapp.utils.maps;
 
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -45,7 +45,7 @@ public class GoogleApiClientSingleton implements com.google.android.gms.common.a
                 .addApi(Places.GEO_DATA_API)
                 .build();
 
-       Log.e(LOG_TAG, "mGoogleApiClient build");
+       Log.i(LOG_TAG, "mGoogleApiClient build");
     }
 
     public void connect()
